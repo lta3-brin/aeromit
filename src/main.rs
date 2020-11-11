@@ -1,4 +1,5 @@
-use actix_web::{HttpServer, App, Responder, get};
+use std::env;
+use actix_web::{HttpServer, App, Responder, middleware, get};
 
 
 #[get("/")]
@@ -8,12 +9,18 @@ async fn app() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv::dotenv().ok();
+    env_logger::init();
+
+    let host = env::var("APP_ADDRESS").expect("Env. APP_ADDRESS diperlukan");
     let server = HttpServer::new(|| {
-        App::new().service(app)
+        App::new()
+            .wrap(middleware::Logger::default())
+            .service(app)
     });
 
     server
-        .bind("127.0.0.1:8080")?
+        .bind(host)?
         .run()
         .await
 }
