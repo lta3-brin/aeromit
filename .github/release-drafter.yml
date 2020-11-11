@@ -1,0 +1,40 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+template: |
+  ## Ini merupakan pengembangan experimental aeromit
+
+  Kunjungi kami juga di website https://bbta3.bppt.go.id dan
+  video BBTA3 dapat dikunjungi https://www.youtube.com/channel/UCa0_hm_SiHxps1Llk_q6I1Q
+
+  Perlu melakukan chat atau berminat gabung, masuk ke tautan berikut ini https://discord.gg/Pnn6Htg
+
+  ## Perubahan yang telah dilakukan
+  $CHANGES
+categories:
+  - title: '💣 Perubahan Total'
+    label: 'breaking'
+  - title: '🚀 Hal Baru'
+    label: 'enhancement'
+  - title: '🐛 Koreksi Bug'
+    label: 'bug'
+  - title: '🔨 Perawatan'
+    label: 'maintenance'
+  - title: '📝 Dokumentasi'
+    label: 'documentation'
+  - title: '🔗 Pembaruan Dependency'
+    label: 'dependencies'
+
+version-resolver:
+  major:
+    labels:
+      - 'breaking'
+  minor:
+    labels:
+      - 'enhancement'
+  patch:
+    labels:
+      - 'bug'
+      - 'maintenance'
+      - 'documentation'
+      - 'dependencies'
+      - 'security'
