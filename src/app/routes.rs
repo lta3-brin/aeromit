@@ -1,4 +1,4 @@
-use actix_web::{Scope, Responder, web, get, HttpResponse, Resource};
+use actix_web::{Scope, web, HttpResponse, Resource};
 use crate::app::handlers::app_handler;
 
 pub struct AppRoutes {
