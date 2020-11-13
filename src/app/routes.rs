@@ -8,7 +8,7 @@
 //!
 //! # Contoh
 //!
-//! ```
+//! ```rust
 //! use crate::app::routes::root_route;
 //! ```
 //!
@@ -27,6 +27,12 @@ use crate::app::handlers::{app_handler, root_handler};
 ///
 /// * `route` - variabel dengan tipe _ServiceConvig_. Dapat digunakan didalam fungsi untuk
 /// menambah/menggabungkan route baru.
+///
+/// <br />
+///
+/// # Keluaran
+///
+/// * `void` - tidak ada return value dari fungsi ini.
 ///
 /// <br />
 ///
