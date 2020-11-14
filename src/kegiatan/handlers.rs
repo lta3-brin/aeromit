@@ -12,8 +12,9 @@
 //! ```rust
 //! use crate::kegiatan::handlers::{...}
 //! ```
-use actix_web::{Responder, HttpResponse, get};
+use actix_web::{Responder, HttpResponse, web, get};
 use crate::app::dto::UmpanBalik;
+use mongodb::Client;
 
 /// # Fungsi baca_kegiatan_handler
 ///
@@ -32,7 +33,11 @@ use crate::app::dto::UmpanBalik;
 ///
 /// * `impl Responder` - keluaran dari fungsi ini _impl Responder_.
 #[get("/kegiatan/")]
-pub async fn baca_kegiatan_handler() -> impl Responder {
+pub async fn baca_kegiatan_handler(client: web::Data<Client>) -> impl Responder {
+    for list_database_name in client.list_database_names(None, None).await.unwrap() {
+        println!("{}", list_database_name);
+    }
+
     HttpResponse::Ok().json(UmpanBalik::<String> {
         sukses: true,
         pesan: "Baca data-data kegiatan".to_string(),
