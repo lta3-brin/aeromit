@@ -14,7 +14,7 @@
 //!
 use actix_web::web;
 use actix_web::web::ServiceConfig;
-use crate::kegiatan::routes::kegiatan_routes;
+use crate::kegiatan::routes::kegiatan_route;
 use crate::app::handlers::{app_handler, root_handler};
 
 /// # Fungsi root_route
@@ -54,6 +54,6 @@ pub fn root_route(route: &mut ServiceConfig) {
         .service(
             web::scope("/v1")
                 .service(app_handler)
-                .configure(kegiatan_routes)
+                .configure(kegiatan_route)
         );
 }
