@@ -12,9 +12,15 @@
 //! ```rust
 //! use crate::kegiatan::handlers::{...}
 //! ```
+use mongodb::{
+    bson::{self, doc, document::Document, Bson},
+    Database,
+    options::FindOptions
+};
+use futures::stream::StreamExt;
 use actix_web::{Responder, HttpResponse, web, get};
 use crate::app::dto::UmpanBalik;
-use mongodb::Client;
+use crate::kegiatan::models::Kegiatan;
 
 /// # Fungsi baca_kegiatan_handler
 ///
@@ -25,7 +31,7 @@ use mongodb::Client;
 ///
 /// # Masukan
 ///
-/// * `kosong` - tidak memerlukan masukan dari fungsi ini.
+/// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
 ///
@@ -33,14 +39,27 @@ use mongodb::Client;
 ///
 /// * `impl Responder` - keluaran dari fungsi ini _impl Responder_.
 #[get("/kegiatan/")]
-pub async fn baca_kegiatan_handler(client: web::Data<Client>) -> impl Responder {
-    for list_database_name in client.list_database_names(None, None).await.unwrap() {
-        println!("{}", list_database_name);
+pub async fn baca_kegiatan_handler(db: web::Data<Database>) -> impl Responder {
+    let mut koleksi_kegiatan: Vec<Kegiatan> = vec![];
+    let collection = db.collection("kegiatan");
+    let options = FindOptions::builder().sort(doc! { "kapan": -1 }).build();
+    let mut cursor = collection.find(None, options).await.unwrap();
+
+    while let Some(result) = cursor.next().await {
+        match result {
+            Ok(document) => {
+                println!("{:?}", document);
+                let keg: Kegiatan = bson::from_document(document).unwrap();
+
+                println!("{:?}", keg)
+            },
+            Err(err) => eprintln!("Error: {:?}", err)
+        }
     }
 
-    HttpResponse::Ok().json(UmpanBalik::<String> {
+    HttpResponse::Ok().json(UmpanBalik::<Vec<Kegiatan>> {
         sukses: true,
-        pesan: "Baca data-data kegiatan".to_string(),
-        hasil: "Contoh data-data kegiatan".to_string()
+        pesan: "Kegiatan berhasil ditampilkan".to_string(),
+        hasil: koleksi_kegiatan
     })
 }
