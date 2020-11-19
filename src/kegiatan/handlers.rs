@@ -13,14 +13,13 @@
 //! use crate::kegiatan::handlers::{...}
 //! ```
 use mongodb::{
-    bson::{self, doc, document::Document, Bson},
-    Database,
-    options::FindOptions
+    bson::doc,
+    Database
 };
-use futures::stream::StreamExt;
 use actix_web::{Responder, HttpResponse, web, get};
 use crate::app::dto::UmpanBalik;
 use crate::kegiatan::models::Kegiatan;
+use crate::kegiatan::services::baca_kegiatan_service;
 
 /// # Fungsi baca_kegiatan_handler
 ///
@@ -40,22 +39,14 @@ use crate::kegiatan::models::Kegiatan;
 /// * `impl Responder` - keluaran dari fungsi ini _impl Responder_.
 #[get("/kegiatan/")]
 pub async fn baca_kegiatan_handler(db: web::Data<Database>) -> impl Responder {
-    let mut koleksi_kegiatan: Vec<Kegiatan> = vec![];
-    let collection = db.collection("kegiatan");
-    let options = FindOptions::builder().sort(doc! { "kapan": -1 }).build();
-    let mut cursor = collection.find(None, options).await.unwrap();
-
-    while let Some(result) = cursor.next().await {
-        match result {
-            Ok(document) => {
-                println!("{:?}", document);
-                let keg: Kegiatan = bson::from_document(document).unwrap();
-
-                println!("{:?}", keg)
-            },
-            Err(err) => eprintln!("Error: {:?}", err)
-        }
-    }
+    let koleksi_kegiatan = baca_kegiatan_service(db).await
+        .map_err(|_err| {
+            HttpResponse::Ok().json(UmpanBalik::<Vec<Kegiatan>> {
+                sukses: false,
+                pesan: "Terjadi kesalahan data".to_string(),
+                hasil: vec![]
+            })
+        }).unwrap();
 
     HttpResponse::Ok().json(UmpanBalik::<Vec<Kegiatan>> {
         sukses: true,
