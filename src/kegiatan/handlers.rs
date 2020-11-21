@@ -40,11 +40,11 @@ use crate::kegiatan::services::baca_kegiatan_service;
 #[get("/kegiatan/")]
 pub async fn baca_kegiatan_handler(db: web::Data<Database>) -> impl Responder {
     let koleksi_kegiatan = baca_kegiatan_service(db).await
-        .map_err(|_err| {
-            HttpResponse::Ok().json(UmpanBalik::<Vec<Kegiatan>> {
+        .map_err(|err| {
+            HttpResponse::InternalServerError().json(UmpanBalik::<&[String]> {
                 sukses: false,
                 pesan: "Terjadi kesalahan data".to_string(),
-                hasil: vec![]
+                hasil: err.labels()
             })
         }).unwrap();
 
