@@ -1,11 +1,10 @@
 mod app;
 mod kegiatan;
 
-use std::env;
 use actix_web::{HttpServer, App, middleware};
-use mongodb::{Client, options::ClientOptions};
 use crate::app::routes::root_route;
 use crate::app::errors::AppErrors;
+use crate::app::configs::AppConfigs;
 
 
 #[actix_web::main]
@@ -13,14 +12,8 @@ async fn main() -> Result<(), AppErrors> {
     dotenv::dotenv().ok();
     env_logger::init();
 
-    let host = env::var("APP_ADDRESS")?;
-    let db_addr = env::var("DATABASE_URL")?;
-    let db_name = env::var("DEFAULT_DATABASE_NAME")?;
-
-    let mongo_option = ClientOptions::parse(db_addr.as_str()).await?;
-    let mongo = Client::with_options(mongo_option)?;
-    let db = mongo.database(db_name.as_str());
-
+    let host = AppConfigs::get_host()?;
+    let db = AppConfigs::database_connection().await?;
     let server = HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::default())
