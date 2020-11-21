@@ -7,7 +7,7 @@
 //! # Contoh
 //!
 //! ```rust
-//! use crate::kegiatan::errors::{...}
+//! use crate::app::errors::{...}
 //! ```
 use std::{env, io};
 
