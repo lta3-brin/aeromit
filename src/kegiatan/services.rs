@@ -17,6 +17,7 @@ use mongodb::{
 use actix_web::web;
 use futures::StreamExt;
 use crate::kegiatan::models::Kegiatan;
+use crate::kegiatan::helpers::doc_to_kegiatan;
 
 /// # Fungsi baca_kegiatan_service
 ///
@@ -36,21 +37,22 @@ use crate::kegiatan::models::Kegiatan;
 /// `Kegiatan` dan _Struct_ `mongodb::error::Error`.
 pub async fn baca_kegiatan_service(db: web::Data<Database>)
     -> Result<Vec<Kegiatan>, mongodb::error::Error> {
+    let mut kegiatan: Vec<Kegiatan> = vec![];
     let collection = db.collection("kegiatan");
     let options = FindOptions::builder().sort(doc! { "kapan": -1 }).build();
-    let mut cursor = collection.find(None, options).await.unwrap();
+    let mut cursor = collection.find(None, options).await?;
 
     while let Some(result) = cursor.next().await {
         match result {
             Ok(document) => {
-                println!("{:?}", document);
-                let keg: Document = bson::from_document(document).unwrap();
+                let dok = bson::from_document::<Document>(document)?;
+                let keg = doc_to_kegiatan(dok).unwrap();
 
-                println!("{:?}", keg);
+                kegiatan.push(keg);
             },
             Err(err) => eprintln!("Error: {:?}", err)
         }
     }
 
-    Ok(vec![])
+    Ok(kegiatan)
 }

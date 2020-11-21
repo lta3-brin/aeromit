@@ -17,4 +17,5 @@
 //!
 pub mod dto;
 pub mod routes;
+pub mod errors;
 mod handlers;
