@@ -16,10 +16,15 @@ use mongodb::{
     bson::doc,
     Database
 };
-use actix_web::{Responder, HttpResponse, web, get};
+use actix_web::{
+    get,
+    web,
+    HttpResponse,
+};
 use crate::app::dto::UmpanBalik;
 use crate::kegiatan::models::Kegiatan;
 use crate::kegiatan::services::baca_kegiatan_service;
+use crate::app::errors::AppErrors;
 
 /// # Fungsi baca_kegiatan_handler
 ///
@@ -38,19 +43,12 @@ use crate::kegiatan::services::baca_kegiatan_service;
 ///
 /// * `impl Responder` - keluaran dari fungsi ini _impl Responder_.
 #[get("/kegiatan/")]
-pub async fn baca_kegiatan_handler(db: web::Data<Database>) -> impl Responder {
-    let koleksi_kegiatan = baca_kegiatan_service(db).await
-        .map_err(|err| {
-            HttpResponse::InternalServerError().json(UmpanBalik::<&[String]> {
-                sukses: false,
-                pesan: "Terjadi kesalahan data".to_string(),
-                hasil: err.labels()
-            })
-        }).unwrap();
+pub async fn baca_kegiatan_handler(db: web::Data<Database>) -> Result<HttpResponse, AppErrors> {
+    let koleksi_kegiatan = baca_kegiatan_service(db).await?;
 
-    HttpResponse::Ok().json(UmpanBalik::<Vec<Kegiatan>> {
+    Ok(HttpResponse::Ok().json(UmpanBalik::<Vec<Kegiatan>> {
         sukses: true,
         pesan: "Kegiatan berhasil ditampilkan".to_string(),
         hasil: koleksi_kegiatan
-    })
+    }))
 }
