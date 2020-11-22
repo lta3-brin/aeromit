@@ -16,6 +16,7 @@ use mongodb::{
     options::ClientOptions
 };
 use crate::app::errors::AppErrors;
+use std::time::Duration;
 
 /// Struct `AppConfigs` sebagai wadah konfigurasi aplikasi.
 pub struct AppConfigs;
@@ -26,7 +27,10 @@ impl AppConfigs {
         let db_addr = env::var("DATABASE_URL")?;
         let db_name = env::var("DEFAULT_DATABASE_NAME")?;
 
-        let mongo_option = ClientOptions::parse(db_addr.as_str()).await?;
+        let mut mongo_option = ClientOptions::parse(db_addr.as_str()).await?;
+        mongo_option.app_name = Some("aeromit".to_string());
+        mongo_option.server_selection_timeout = Some(Duration::new(1, 0));
+
         let mongo = Client::with_options(mongo_option)?;
 
         Ok(mongo.database(db_name.as_str()))
