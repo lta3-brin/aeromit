@@ -13,14 +13,18 @@
 //! use crate::kegiatan::handlers::{...}
 //! ```
 use mongodb::{
-    bson::{self, doc, document::Document, Bson},
-    Database,
-    options::FindOptions
+    bson::doc,
+    Database
 };
-use futures::stream::StreamExt;
-use actix_web::{Responder, HttpResponse, web, get};
+use actix_web::{
+    get,
+    web,
+    HttpResponse,
+};
 use crate::app::dto::UmpanBalik;
 use crate::kegiatan::models::Kegiatan;
+use crate::kegiatan::services::baca_kegiatan_service;
+use crate::app::errors::AppErrors;
 
 /// # Fungsi baca_kegiatan_handler
 ///
@@ -39,27 +43,12 @@ use crate::kegiatan::models::Kegiatan;
 ///
 /// * `impl Responder` - keluaran dari fungsi ini _impl Responder_.
 #[get("/kegiatan/")]
-pub async fn baca_kegiatan_handler(db: web::Data<Database>) -> impl Responder {
-    let mut koleksi_kegiatan: Vec<Kegiatan> = vec![];
-    let collection = db.collection("kegiatan");
-    let options = FindOptions::builder().sort(doc! { "kapan": -1 }).build();
-    let mut cursor = collection.find(None, options).await.unwrap();
+pub async fn baca_kegiatan_handler(db: web::Data<Database>) -> Result<HttpResponse, AppErrors> {
+    let koleksi_kegiatan = baca_kegiatan_service(db).await?;
 
-    while let Some(result) = cursor.next().await {
-        match result {
-            Ok(document) => {
-                println!("{:?}", document);
-                let keg: Kegiatan = bson::from_document(document).unwrap();
-
-                println!("{:?}", keg)
-            },
-            Err(err) => eprintln!("Error: {:?}", err)
-        }
-    }
-
-    HttpResponse::Ok().json(UmpanBalik::<Vec<Kegiatan>> {
+    Ok(HttpResponse::Ok().json(UmpanBalik::<Vec<Kegiatan>> {
         sukses: true,
         pesan: "Kegiatan berhasil ditampilkan".to_string(),
         hasil: koleksi_kegiatan
-    })
+    }))
 }

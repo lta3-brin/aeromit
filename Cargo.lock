@@ -278,11 +278,12 @@ checksum = "ee2a4ec343196209d6594e19543ae87a39f96d5534d7174822a3ad825dd6ed7e"
 
 [[package]]
 name = "aeromit"
-version = "0.0.2"
+version = "0.1.0"
 dependencies = [
  "actix-web",
  "bcrypt",
  "chrono",
+ "derive_more",
  "dotenv",
  "env_logger",
  "futures",
