@@ -22,6 +22,15 @@ use std::time::Duration;
 pub struct AppConfigs;
 
 impl AppConfigs {
+    /// Fungsi `init_config` digunakan untuk memuat _environment_ awal yang diperlukan.
+    pub fn init_config() {
+        dotenv::dotenv().ok();
+        env_logger::init();
+    }
+
+    /// Fungsi `get_host` digunakan untuk mendapatkan host.
+    pub fn get_host() -> Result<String, AppErrors> { Ok(env::var("APP_ADDRESS")?) }
+
     /// Fungsi `database_connection` digunakan untuk membuat koneksi database.
     pub async fn database_connection() -> Result<Database, AppErrors> {
         let db_addr = env::var("DATABASE_URL")?;
@@ -34,10 +43,5 @@ impl AppConfigs {
         let mongo = Client::with_options(mongo_option)?;
 
         Ok(mongo.database(db_name.as_str()))
-    }
-
-    /// Fungsi `get_host` digunakan untuk mendapatkan host.
-    pub fn get_host() -> Result<String, AppErrors> {
-        Ok(env::var("APP_ADDRESS")?)
     }
 }
