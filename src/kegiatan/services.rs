@@ -18,6 +18,7 @@ use actix_web::web;
 use futures::StreamExt;
 use crate::kegiatan::models::Kegiatan;
 use crate::kegiatan::helpers::doc_to_kegiatan;
+use crate::app::errors::AppErrors;
 
 /// # Fungsi baca_kegiatan_service
 ///
@@ -36,7 +37,7 @@ use crate::kegiatan::helpers::doc_to_kegiatan;
 /// * `Result<Vec<Kegiatan>, Error>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `Kegiatan` dan _Struct_ `mongodb::error::Error`.
 pub async fn baca_kegiatan_service(db: web::Data<Database>)
-    -> Result<Vec<Kegiatan>, mongodb::error::Error> {
+    -> Result<Vec<Kegiatan>, AppErrors> {
     let mut kegiatan: Vec<Kegiatan> = vec![];
     let collection = db.collection("kegiatan");
     let options = FindOptions::builder().sort(doc! { "kapan": -1 }).build();
@@ -46,7 +47,7 @@ pub async fn baca_kegiatan_service(db: web::Data<Database>)
         match result {
             Ok(document) => {
                 let dok = bson::from_document::<Document>(document)?;
-                let keg = doc_to_kegiatan(dok).unwrap();
+                let keg = doc_to_kegiatan(dok)?;
 
                 kegiatan.push(keg);
             },

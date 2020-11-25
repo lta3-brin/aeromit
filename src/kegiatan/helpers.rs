@@ -11,23 +11,13 @@
 //! ```
 use mongodb::bson::Document;
 use crate::kegiatan::models::Kegiatan;
+use crate::app::errors::AppErrors;
 
-pub fn doc_to_kegiatan(dok: Document) -> Result<Kegiatan, String> {
-    let id = dok.get_object_id("_id")
-        .map_err(|err| err.to_string())
-        .unwrap();
-
-    let kapan = dok.get_datetime("kapan")
-        .map_err(|err| err.to_string())
-        .unwrap();
-
-    let nama = dok.get_str("nama")
-        .map_err(|err| err.to_string())
-        .unwrap();
-
-    let ruang = dok.get_str("ruang")
-        .map_err(|err| err.to_string())
-        .unwrap();
+pub fn doc_to_kegiatan(dok: Document) -> Result<Kegiatan, AppErrors> {
+    let id = dok.get_object_id("_id")?;
+    let kapan = dok.get_datetime("kapan")?;
+    let nama = dok.get_str("nama")?;
+    let ruang = dok.get_str("ruang")?;
 
     Ok(Kegiatan {
         id: id.to_hex(),

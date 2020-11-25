@@ -9,8 +9,7 @@ use crate::app::configs::AppConfigs;
 
 #[actix_web::main]
 async fn main() -> Result<(), AppErrors> {
-    dotenv::dotenv().ok();
-    env_logger::init();
+    AppConfigs::init_config();
 
     let host = AppConfigs::get_host()?;
     let db = AppConfigs::database_connection().await?;
