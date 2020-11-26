@@ -13,6 +13,23 @@ use mongodb::bson::Document;
 use crate::kegiatan::models::Kegiatan;
 use crate::app::errors::AppErrors;
 
+
+/// # Fungsi doc_to_kegiatan
+///
+/// Fungsi ini untuk mengubah _Mongo Document_ ke _struct_ `Kegiatan`.
+///
+/// <br />
+///
+/// # Masukan
+///
+/// * `dok` - masukan dengan _type_ `Document`.
+///
+/// <br />
+///
+/// # Keluaran
+///
+/// * `Result<Kegiatan, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// `Kegiatan` dan _Enum_ `AppErrors`.
 pub fn doc_to_kegiatan(dok: Document) -> Result<Kegiatan, AppErrors> {
     let id = dok.get_object_id("_id")?;
     let kapan = dok.get_datetime("kapan")?;
@@ -23,6 +40,6 @@ pub fn doc_to_kegiatan(dok: Document) -> Result<Kegiatan, AppErrors> {
         id: id.to_hex(),
         nama: nama.to_string(),
         kapan: *kapan,
-        ruang: ruang.to_string()
+        ruang: ruang.to_string(),
     })
 }
