@@ -29,7 +29,8 @@ pub enum AppErrors {
     MongoError(mongodb::error::Error),
     ActixError(io::Error),
     BsonAccessError(bson::document::ValueAccessError),
-    BsonDeserializeError(bson::de::Error)
+    BsonDeserializeError(bson::de::Error),
+    ParseOidError(bson::oid::Error)
 }
 
 /// Implementasi `AppErrors` apabila terjadi kesalahan seputar `env::VarError`
@@ -67,15 +68,19 @@ impl From<bson::de::Error> for AppErrors {
     }
 }
 
+/// Implementasi `AppErrors` apabila terjadi kesalahan seputar `bson::oid::Error`
+impl From<bson::oid::Error> for AppErrors {
+    fn from(err: bson::oid::Error) -> Self {
+        Self::ParseOidError(err)
+    }
+}
+
 /// Menampilkan kesalahan yang mungkin terjadi dari `AppErrors` kedalam bentuk `ResponseError`
 impl ResponseError for AppErrors {
     fn status_code(&self) -> StatusCode {
         match *self {
-            AppErrors::EnvError(..) => StatusCode::INTERNAL_SERVER_ERROR,
-            AppErrors::MongoError(..) => StatusCode::INTERNAL_SERVER_ERROR,
-            AppErrors::ActixError(..) => StatusCode::INTERNAL_SERVER_ERROR,
-            AppErrors::BsonAccessError(..) => StatusCode::INTERNAL_SERVER_ERROR,
-            AppErrors::BsonDeserializeError(..) => StatusCode::INTERNAL_SERVER_ERROR,
+            AppErrors::ParseOidError(..) => StatusCode::BAD_REQUEST,
+            _ => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
