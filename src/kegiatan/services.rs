@@ -12,7 +12,7 @@
 use mongodb::{
     Database,
     options::FindOptions,
-    bson::{self, doc, Document},
+    bson::{self, doc, oid::ObjectId, Document},
 };
 use actix_web::web;
 use futures::StreamExt;
@@ -20,6 +20,7 @@ use crate::app::errors::AppErrors;
 use crate::kegiatan::dto::DocProps;
 use crate::kegiatan::models::Kegiatan;
 use crate::kegiatan::helpers::doc_to_kegiatan;
+
 
 /// # Fungsi baca_kegiatan_service
 ///
@@ -36,7 +37,7 @@ use crate::kegiatan::helpers::doc_to_kegiatan;
 ///
 /// # Keluaran
 ///
-/// * `Result<Vec<Kegiatan>, Error>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
+/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `Kegiatan` dan _Enum_ `AppErrors`.
 pub async fn baca_kegiatan_service(doc_props: web::Query<DocProps>, db: web::Data<Database>)
                                    -> Result<Vec<Kegiatan>, AppErrors> {
@@ -54,7 +55,10 @@ pub async fn baca_kegiatan_service(doc_props: web::Query<DocProps>, db: web::Dat
         .skip(doc_props.skip)
         .build();
 
-    let mut cursor = collection.find(None, options).await?;
+    let mut cursor = collection
+        .find(None, options)
+        .await?;
+
     while let Some(result) = cursor.next().await {
         match result {
             Ok(document) => {
@@ -68,4 +72,40 @@ pub async fn baca_kegiatan_service(doc_props: web::Query<DocProps>, db: web::Dat
     }
 
     Ok(kegiatan)
+}
+
+/// # Fungsi baca_kegiatan_tertentu_service
+///
+/// Fungsi ini untuk menampilkan data `Kegiatan` tertentu berdasarkan id
+///
+/// <br />
+///
+/// # Masukan
+///
+/// * `uid` - id unik dokumen untuk dipilih.
+/// * `db` - mongodb Database type yang dishare melalui _application state_.
+///
+/// <br />
+///
+/// # Keluaran
+///
+/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
+/// `Kegiatan` dan _Enum_ `AppErrors`.
+pub async fn baca_kegiatan_tertentu_service(uid: web::Path<String>, db: web::Data<Database>)
+                                            -> Result<Option<Kegiatan>, AppErrors> {
+    let id = ObjectId::with_string(uid.trim())?;
+    let collection = db.collection("kegiatan");
+    let result = collection
+        .find_one(doc! {"_id": id}, None)
+        .await?;
+
+    match result {
+        Some(document) => {
+            let dok = bson::from_document::<Document>(document)?;
+            let keg = doc_to_kegiatan(dok)?;
+
+            Ok(Some(keg))
+        }
+        None => Ok(None)
+    }
 }
