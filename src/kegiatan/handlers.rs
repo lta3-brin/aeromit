@@ -14,7 +14,7 @@
 //! ```
 use mongodb::{
     bson::doc,
-    Database
+    Database,
 };
 use actix_web::{
     get,
@@ -22,9 +22,10 @@ use actix_web::{
     HttpResponse,
 };
 use crate::app::dto::UmpanBalik;
+use crate::app::errors::AppErrors;
+use crate::kegiatan::dto::DocProps;
 use crate::kegiatan::models::Kegiatan;
 use crate::kegiatan::services::baca_kegiatan_service;
-use crate::app::errors::AppErrors;
 
 /// # Fungsi baca_kegiatan_handler
 ///
@@ -35,20 +36,23 @@ use crate::app::errors::AppErrors;
 ///
 /// # Masukan
 ///
+/// * `doc_props` - properti dokumen untuk kelola limit dan skip.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
 ///
 /// # Keluaran
 ///
-/// * `impl Responder` - keluaran dari fungsi ini _impl Responder_.
+/// * `HttpResponse` - keluaran dari fungsi ini _HttpResponse_.
+/// * `AppErrors` - keluaran dari fungsi ini _HttpResponse_.
 #[get("/kegiatan/")]
-pub async fn baca_kegiatan_handler(db: web::Data<Database>) -> Result<HttpResponse, AppErrors> {
-    let koleksi_kegiatan = baca_kegiatan_service(db).await?;
+pub async fn baca_kegiatan_handler(doc_props: web::Query<DocProps>, db: web::Data<Database>)
+                                   -> Result<HttpResponse, AppErrors> {
+    let koleksi_kegiatan = baca_kegiatan_service(doc_props, db).await?;
 
     Ok(HttpResponse::Ok().json(UmpanBalik::<Vec<Kegiatan>> {
         sukses: true,
         pesan: "Kegiatan berhasil ditampilkan".to_string(),
-        hasil: koleksi_kegiatan
+        hasil: koleksi_kegiatan,
     }))
 }
