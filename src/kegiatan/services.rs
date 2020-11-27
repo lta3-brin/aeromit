@@ -18,9 +18,9 @@ use actix_web::web;
 use futures::StreamExt;
 use chrono::{DateTime, Utc};
 use crate::app::errors::AppErrors;
-use crate::kegiatan::dto::{DocProps, KegiatanDto};
 use crate::kegiatan::models::Kegiatan;
 use crate::kegiatan::helpers::doc_to_kegiatan;
+use crate::kegiatan::dto::{DocProps, KegiatanDto};
 
 
 /// # Fungsi tambah_kegiatan_service
@@ -38,12 +38,12 @@ use crate::kegiatan::helpers::doc_to_kegiatan;
 ///
 /// # Keluaran
 ///
-/// * `Result<String, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari dokumen id
-/// `Kegiatan` yang baru ditambah dan _Enum_ `AppErrors`.
+/// * `Result<(), AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari None
+/// dan _Enum_ `AppErrors`.
 pub async fn tambah_kegiatan_service(
     payload: web::Form<KegiatanDto>,
     db: web::Data<Database>,
-) -> Result<String, AppErrors> {
+) -> Result<(), AppErrors> {
     let collection = db.collection("kegiatan");
 
     let parse_dt = DateTime::parse_from_rfc3339(
@@ -58,13 +58,11 @@ pub async fn tambah_kegiatan_service(
         "ruang": payload.0.ruang
     };
 
-    let result = collection
+    collection
         .insert_one(dok, None)
         .await?;
 
-    let id = bson::from_bson::<String>(result.inserted_id)?;
-
-    Ok(id)
+    Ok(())
 }
 
 /// # Fungsi baca_kegiatan_service
