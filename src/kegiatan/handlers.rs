@@ -57,12 +57,12 @@ use crate::kegiatan::services::{
 #[post("/kegiatan/")]
 pub async fn tambah_kegiatan_handler(payload: web::Form<KegiatanDto>, db: web::Data<Database>)
                                      -> Result<HttpResponse, AppErrors> {
-    let id_kegiatan = tambah_kegiatan_service(payload, db).await?;
+    tambah_kegiatan_service(payload, db).await?;
 
-    Ok(HttpResponse::Created().json(UmpanBalik::<String> {
+    Ok(HttpResponse::Created().json(UmpanBalik::<()> {
         sukses: true,
         pesan: "Kegiatan berhasil ditambahkan".to_string(),
-        hasil: id_kegiatan,
+        hasil: (),
     }))
 }
 
