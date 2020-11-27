@@ -17,15 +17,54 @@ use mongodb::{
     Database,
 };
 use actix_web::{
+    post,
     get,
     web,
     HttpResponse,
 };
 use crate::app::dto::UmpanBalik;
 use crate::app::errors::AppErrors;
-use crate::kegiatan::dto::DocProps;
 use crate::kegiatan::models::Kegiatan;
-use crate::kegiatan::services::{baca_kegiatan_service, baca_kegiatan_tertentu_service};
+use crate::kegiatan::dto::{
+    DocProps,
+    KegiatanDto,
+};
+use crate::kegiatan::services::{
+    tambah_kegiatan_service,
+    baca_kegiatan_service,
+    baca_kegiatan_tertentu_service,
+};
+
+
+/// # Fungsi tambah_kegiatan_handler
+///
+/// Fungsi ini untuk menampilkan _response_ umpan balik hasil penambahan kegiatan baru
+/// saat mengunjungi _endpoint root_ `v1/kegiatan`.
+///
+/// <br />
+///
+/// # Masukan
+///
+/// * `payload` - Data masukan dari pengguna untuk tambah kegiatan.
+/// * `db` - mongodb Database type yang dishare melalui _application state_.
+///
+/// <br />
+///
+/// # Keluaran
+///
+/// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
+/// `HttpResponse` dan _Enum_ `AppErrors`.
+#[post("/kegiatan/")]
+pub async fn tambah_kegiatan_handler(payload: web::Form<KegiatanDto>, db: web::Data<Database>)
+                                     -> Result<HttpResponse, AppErrors> {
+    let id_kegiatan = tambah_kegiatan_service(payload, db).await?;
+
+    Ok(HttpResponse::Created().json(UmpanBalik::<String> {
+        sukses: true,
+        pesan: "Kegiatan berhasil ditambahkan".to_string(),
+        hasil: id_kegiatan,
+    }))
+}
 
 /// # Fungsi baca_kegiatan_handler
 ///

@@ -16,11 +16,56 @@ use mongodb::{
 };
 use actix_web::web;
 use futures::StreamExt;
+use chrono::{DateTime, Utc};
 use crate::app::errors::AppErrors;
-use crate::kegiatan::dto::DocProps;
+use crate::kegiatan::dto::{DocProps, KegiatanDto};
 use crate::kegiatan::models::Kegiatan;
 use crate::kegiatan::helpers::doc_to_kegiatan;
 
+
+/// # Fungsi tambah_kegiatan_service
+///
+/// Fungsi ini untuk menambahkan data `Kegiatan` baru.
+///
+/// <br />
+///
+/// # Masukan
+///
+/// * `payload` - Data masukan dari pengguna untuk tambah kegiatan.
+/// * `db` - mongodb Database type yang dishare melalui _application state_.
+///
+/// <br />
+///
+/// # Keluaran
+///
+/// * `Result<String, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari dokumen id
+/// `Kegiatan` yang baru ditambah dan _Enum_ `AppErrors`.
+pub async fn tambah_kegiatan_service(
+    payload: web::Form<KegiatanDto>,
+    db: web::Data<Database>,
+) -> Result<String, AppErrors> {
+    let collection = db.collection("kegiatan");
+
+    let parse_dt = DateTime::parse_from_rfc3339(
+        payload.0.kapan.as_str()
+    )?;
+
+    let bson_dt = bson::Bson::DateTime(parse_dt.with_timezone(&Utc));
+
+    let dok = doc! {
+        "nama": payload.0.nama,
+        "kapan": bson_dt,
+        "ruang": payload.0.ruang
+    };
+
+    let result = collection
+        .insert_one(dok, None)
+        .await?;
+
+    let id = bson::from_bson::<String>(result.inserted_id)?;
+
+    Ok(id)
+}
 
 /// # Fungsi baca_kegiatan_service
 ///

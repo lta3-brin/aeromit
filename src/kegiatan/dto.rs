@@ -21,5 +21,18 @@ pub struct DocProps {
     pub limit: Option<i64>,
 
     /// seberapa banyak dokumen yang dilewati
-    pub skip: Option<i64>
+    pub skip: Option<i64>,
+}
+
+/// Struct sebagai data transfer object dari pengguna.
+#[derive(Debug, Deserialize)]
+pub struct KegiatanDto {
+    /// nama kegiatan
+    pub nama: String,
+
+    /// kapan kegiatan diadakan
+    pub kapan: String,
+
+    /// dimana kegiatan diadakan
+    pub ruang: String,
 }

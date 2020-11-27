@@ -30,7 +30,8 @@ pub enum AppErrors {
     ActixError(io::Error),
     BsonAccessError(bson::document::ValueAccessError),
     BsonDeserializeError(bson::de::Error),
-    ParseOidError(bson::oid::Error)
+    ParseOidError(bson::oid::Error),
+    ParseChronoError(chrono::ParseError)
 }
 
 /// Implementasi `AppErrors` apabila terjadi kesalahan seputar `env::VarError`
@@ -75,11 +76,19 @@ impl From<bson::oid::Error> for AppErrors {
     }
 }
 
+/// Implementasi `AppErrors` apabila terjadi kesalahan seputar `chrono::ParseError`
+impl From<chrono::ParseError> for AppErrors {
+    fn from(err: chrono::ParseError) -> Self {
+        Self::ParseChronoError(err)
+    }
+}
+
 /// Menampilkan kesalahan yang mungkin terjadi dari `AppErrors` kedalam bentuk `ResponseError`
 impl ResponseError for AppErrors {
     fn status_code(&self) -> StatusCode {
         match *self {
             AppErrors::ParseOidError(..) => StatusCode::BAD_REQUEST,
+            AppErrors::ParseChronoError(..) => StatusCode::BAD_REQUEST,
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
