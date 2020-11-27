@@ -14,17 +14,57 @@
 //! ```
 use mongodb::{
     bson::doc,
-    Database
+    Database,
 };
 use actix_web::{
+    post,
     get,
     web,
     HttpResponse,
 };
 use crate::app::dto::UmpanBalik;
-use crate::kegiatan::models::Kegiatan;
-use crate::kegiatan::services::baca_kegiatan_service;
 use crate::app::errors::AppErrors;
+use crate::kegiatan::models::Kegiatan;
+use crate::kegiatan::dto::{
+    DocProps,
+    KegiatanDto,
+};
+use crate::kegiatan::services::{
+    tambah_kegiatan_service,
+    baca_kegiatan_service,
+    baca_kegiatan_tertentu_service,
+};
+
+
+/// # Fungsi tambah_kegiatan_handler
+///
+/// Fungsi ini untuk menampilkan _response_ umpan balik hasil penambahan kegiatan baru
+/// saat mengunjungi _endpoint root_ `v1/kegiatan`.
+///
+/// <br />
+///
+/// # Masukan
+///
+/// * `payload` - Data masukan dari pengguna untuk tambah kegiatan.
+/// * `db` - mongodb Database type yang dishare melalui _application state_.
+///
+/// <br />
+///
+/// # Keluaran
+///
+/// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
+/// `HttpResponse` dan _Enum_ `AppErrors`.
+#[post("/kegiatan/")]
+pub async fn tambah_kegiatan_handler(payload: web::Form<KegiatanDto>, db: web::Data<Database>)
+                                     -> Result<HttpResponse, AppErrors> {
+    let id_kegiatan = tambah_kegiatan_service(payload, db).await?;
+
+    Ok(HttpResponse::Created().json(UmpanBalik::<String> {
+        sukses: true,
+        pesan: "Kegiatan berhasil ditambahkan".to_string(),
+        hasil: id_kegiatan,
+    }))
+}
 
 /// # Fungsi baca_kegiatan_handler
 ///
@@ -35,20 +75,53 @@ use crate::app::errors::AppErrors;
 ///
 /// # Masukan
 ///
+/// * `doc_props` - properti dokumen untuk kelola limit dan skip.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
 ///
 /// # Keluaran
 ///
-/// * `impl Responder` - keluaran dari fungsi ini _impl Responder_.
+/// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
+/// `HttpResponse` dan _Enum_ `AppErrors`.
 #[get("/kegiatan/")]
-pub async fn baca_kegiatan_handler(db: web::Data<Database>) -> Result<HttpResponse, AppErrors> {
-    let koleksi_kegiatan = baca_kegiatan_service(db).await?;
+pub async fn baca_kegiatan_handler(doc_props: web::Query<DocProps>, db: web::Data<Database>)
+                                   -> Result<HttpResponse, AppErrors> {
+    let koleksi_kegiatan = baca_kegiatan_service(doc_props, db).await?;
 
     Ok(HttpResponse::Ok().json(UmpanBalik::<Vec<Kegiatan>> {
         sukses: true,
         pesan: "Kegiatan berhasil ditampilkan".to_string(),
-        hasil: koleksi_kegiatan
+        hasil: koleksi_kegiatan,
+    }))
+}
+
+/// # Fungsi baca_kegiatan_tertentu_handler
+///
+/// Fungsi ini untuk menampilkan _response_ umpan balik kegiatan tertentu
+/// berdasarkan id saat mengunjungi _endpoint root_ `v1/kegiatan/{id}`.
+///
+/// <br />
+///
+/// # Masukan
+///
+/// * `id` - id dokumen yang ingin ditelusuri.
+/// * `db` - mongodb Database type yang dishare melalui _application state_.
+///
+/// <br />
+///
+/// # Keluaran
+///
+/// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
+/// `HttpResponse` dan _Enum_ `AppErrors`.
+#[get("/kegiatan/{id}/")]
+pub async fn baca_kegiatan_tertentu_handler(id: web::Path<String>, db: web::Data<Database>)
+                                            -> Result<HttpResponse, AppErrors> {
+    let kegiatan = baca_kegiatan_tertentu_service(id, db).await?;
+
+    Ok(HttpResponse::Ok().json(UmpanBalik::<Option<Kegiatan>> {
+        sukses: true,
+        pesan: "Kegiatan berhasil ditampilkan".to_string(),
+        hasil: kegiatan,
     }))
 }

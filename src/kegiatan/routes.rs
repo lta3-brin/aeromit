@@ -13,7 +13,11 @@
 //! ```
 //!
 use actix_web::web;
-use crate::kegiatan::handlers::baca_kegiatan_handler;
+use crate::kegiatan::handlers::{
+    tambah_kegiatan_handler,
+    baca_kegiatan_handler,
+    baca_kegiatan_tertentu_handler
+};
 
 /// # Fungsi kegiatan_route
 /// Fungsi ini menerima satu masukan yaitu [_ServiceConfig_](https://docs.rs/actix-web/3.2.0/actix_web/web/struct.ServiceConfig.html)
@@ -48,5 +52,7 @@ use crate::kegiatan::handlers::baca_kegiatan_handler;
 ///
 pub fn kegiatan_route(route: &mut web::ServiceConfig) {
     route
-        .service(baca_kegiatan_handler);
+        .service(tambah_kegiatan_handler)
+        .service(baca_kegiatan_handler)
+        .service(baca_kegiatan_tertentu_handler);
 }
