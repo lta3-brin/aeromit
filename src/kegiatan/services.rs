@@ -16,11 +16,10 @@ use mongodb::{
 };
 use actix_web::web;
 use futures::StreamExt;
-use chrono::{DateTime, Utc};
 use crate::app::errors::AppErrors;
-use crate::kegiatan::dto::{DocProps, KegiatanDto};
 use crate::kegiatan::models::Kegiatan;
-use crate::kegiatan::helpers::doc_to_kegiatan;
+use crate::kegiatan::dto::{DocProps, KegiatanDto};
+use crate::kegiatan::helpers::{doc_to_kegiatan, kegiatan_to_doc};
 
 
 /// # Fungsi tambah_kegiatan_service
@@ -38,33 +37,20 @@ use crate::kegiatan::helpers::doc_to_kegiatan;
 ///
 /// # Keluaran
 ///
-/// * `Result<String, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari dokumen id
-/// `Kegiatan` yang baru ditambah dan _Enum_ `AppErrors`.
+/// * `Result<(), AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari None
+/// dan _Enum_ `AppErrors`.
 pub async fn tambah_kegiatan_service(
     payload: web::Form<KegiatanDto>,
     db: web::Data<Database>,
-) -> Result<String, AppErrors> {
+) -> Result<(), AppErrors> {
     let collection = db.collection("kegiatan");
+    let dok = kegiatan_to_doc(payload, false)?;
 
-    let parse_dt = DateTime::parse_from_rfc3339(
-        payload.0.kapan.as_str()
-    )?;
-
-    let bson_dt = bson::Bson::DateTime(parse_dt.with_timezone(&Utc));
-
-    let dok = doc! {
-        "nama": payload.0.nama,
-        "kapan": bson_dt,
-        "ruang": payload.0.ruang
-    };
-
-    let result = collection
+    collection
         .insert_one(dok, None)
         .await?;
 
-    let id = bson::from_bson::<String>(result.inserted_id)?;
-
-    Ok(id)
+    Ok(())
 }
 
 /// # Fungsi baca_kegiatan_service
@@ -84,8 +70,10 @@ pub async fn tambah_kegiatan_service(
 ///
 /// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `Kegiatan` dan _Enum_ `AppErrors`.
-pub async fn baca_kegiatan_service(doc_props: web::Query<DocProps>, db: web::Data<Database>)
-                                   -> Result<Vec<Kegiatan>, AppErrors> {
+pub async fn baca_kegiatan_service(
+    doc_props: web::Query<DocProps>,
+    db: web::Data<Database>
+) -> Result<Vec<Kegiatan>, AppErrors> {
     let mut kegiatan: Vec<Kegiatan> = vec![];
     let collection = db.collection("kegiatan");
 
@@ -136,8 +124,10 @@ pub async fn baca_kegiatan_service(doc_props: web::Query<DocProps>, db: web::Dat
 ///
 /// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `Kegiatan` dan _Enum_ `AppErrors`.
-pub async fn baca_kegiatan_tertentu_service(uid: web::Path<String>, db: web::Data<Database>)
-                                            -> Result<Option<Kegiatan>, AppErrors> {
+pub async fn baca_kegiatan_tertentu_service(
+    uid: web::Path<String>,
+    db: web::Data<Database>
+) -> Result<Option<Kegiatan>, AppErrors> {
     let id = ObjectId::with_string(uid.trim())?;
     let collection = db.collection("kegiatan");
     let result = collection
@@ -153,4 +143,38 @@ pub async fn baca_kegiatan_tertentu_service(uid: web::Path<String>, db: web::Dat
         }
         None => Ok(None)
     }
+}
+
+/// # Fungsi ubah_kegiatan_tertentu_service
+///
+/// Fungsi ini untuk mengubah data `Kegiatan` tertentu berdasarkan id
+///
+/// <br />
+///
+/// # Masukan
+///
+/// * `uid` - id unik dokumen untuk dipilih.
+/// * `payload` - Data masukan dari pengguna untuk ubah kegiatan.
+/// * `db` - mongodb Database type yang dishare melalui _application state_.
+///
+/// <br />
+///
+/// # Keluaran
+///
+/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
+/// `Kegiatan` dan _Enum_ `AppErrors`.
+pub async fn ubah_kegiatan_tertentu_service(
+    uid: web::Path<String>,
+    payload: web::Form<KegiatanDto>,
+    db: web::Data<Database>
+) -> Result<(), AppErrors> {
+    let collection = db.collection("kegiatan");
+    let id = ObjectId::with_string(uid.as_str())?;
+    let dok = kegiatan_to_doc(payload, true)?;
+
+    collection
+        .update_one(doc! {"_id": id}, dok, None)
+        .await?;
+
+    Ok(())
 }
