@@ -37,7 +37,7 @@ use crate::kegiatan::helpers::{doc_to_kegiatan, kegiatan_to_doc};
 ///
 /// # Keluaran
 ///
-/// * `Result<(), AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari None
+/// * `Result<(), AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari ()
 /// dan _Enum_ `AppErrors`.
 pub async fn tambah_kegiatan_service(
     payload: web::Form<KegiatanDto>,
@@ -68,8 +68,8 @@ pub async fn tambah_kegiatan_service(
 ///
 /// # Keluaran
 ///
-/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
-/// `Kegiatan` dan _Enum_ `AppErrors`.
+/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// kumpulan `Kegiatan` dan _Enum_ `AppErrors`.
 pub async fn baca_kegiatan_service(
     doc_props: web::Query<DocProps>,
     db: web::Data<Database>
@@ -122,8 +122,8 @@ pub async fn baca_kegiatan_service(
 ///
 /// # Keluaran
 ///
-/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
-/// `Kegiatan` dan _Enum_ `AppErrors`.
+/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// `Option<Kegiatan>` dan _Enum_ `AppErrors`.
 pub async fn baca_kegiatan_tertentu_service(
     uid: web::Path<String>,
     db: web::Data<Database>
@@ -161,8 +161,8 @@ pub async fn baca_kegiatan_tertentu_service(
 ///
 /// # Keluaran
 ///
-/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
-/// `Kegiatan` dan _Enum_ `AppErrors`.
+/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// `()` dan _Enum_ `AppErrors`.
 pub async fn ubah_kegiatan_tertentu_service(
     uid: web::Path<String>,
     payload: web::Form<KegiatanDto>,
@@ -174,6 +174,37 @@ pub async fn ubah_kegiatan_tertentu_service(
 
     collection
         .update_one(doc! {"_id": id}, dok, None)
+        .await?;
+
+    Ok(())
+}
+
+/// # Fungsi hapus_kegiatan_tertentu_service
+///
+/// Fungsi ini untuk hapus data `Kegiatan` tertentu berdasarkan id
+///
+/// <br />
+///
+/// # Masukan
+///
+/// * `uid` - id unik dokumen untuk dipilih.
+/// * `db` - mongodb Database type yang dishare melalui _application state_.
+///
+/// <br />
+///
+/// # Keluaran
+///
+/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// `()` dan _Enum_ `AppErrors`.
+pub async fn hapus_kegiatan_tertentu_service(
+    uid: web::Path<String>,
+    db: web::Data<Database>
+) -> Result<(), AppErrors> {
+    let id = ObjectId::with_string(uid.trim())?;
+    let collection = db.collection("kegiatan");
+
+    collection
+        .delete_one(doc! {"_id": id}, None)
         .await?;
 
     Ok(())
