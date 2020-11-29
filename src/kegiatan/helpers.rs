@@ -9,9 +9,12 @@
 //! ```rust
 //! use crate::kegiatan::services::{...}
 //! ```
-use mongodb::bson::Document;
-use crate::kegiatan::models::Kegiatan;
+use actix_web::web;
+use chrono::{DateTime, Utc};
+use mongodb::bson::{Document, Bson, doc};
 use crate::app::errors::AppErrors;
+use crate::kegiatan::models::Kegiatan;
+use crate::kegiatan::dto::KegiatanDto;
 
 
 /// # Fungsi doc_to_kegiatan
@@ -42,4 +45,51 @@ pub fn doc_to_kegiatan(dok: Document) -> Result<Kegiatan, AppErrors> {
         kapan: *kapan,
         ruang: ruang.to_string(),
     })
+}
+
+/// # Fungsi kegiatan_to_doc
+///
+/// Fungsi ini untuk mengubah _struct_ `Kegiatan` ke _Mongo Document_.
+///
+/// <br />
+///
+/// # Masukan
+///
+/// * `payload` - masukan dengan _type Struct_ `Kegiatan` berupa _DTO_.
+/// * `update` - status apakah update atau tidak.
+///
+/// <br />
+///
+/// # Keluaran
+///
+/// * `Result<Document, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// `Document` dan _Enum_ `AppErrors`.
+pub fn kegiatan_to_doc(
+    payload: web::Form<KegiatanDto>,
+    update: bool
+) -> Result<Document, AppErrors> {
+    let dok: Document;
+    let parse_dt = DateTime::parse_from_rfc3339(
+        payload.0.kapan.as_str()
+    )?;
+
+    let bson_dt: Bson = Bson::DateTime(parse_dt.with_timezone(&Utc));
+
+    if update {
+        dok = doc! {
+            "$set": {
+                "nama": payload.0.nama,
+                "kapan": bson_dt,
+                "ruang": payload.0.ruang
+            }
+        };
+    } else {
+        dok = doc! {
+            "nama": payload.0.nama,
+            "kapan": bson_dt,
+            "ruang": payload.0.ruang
+        };
+    }
+
+    Ok(dok)
 }
