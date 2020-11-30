@@ -16,6 +16,7 @@ use mongodb::{
 };
 use actix_web::web;
 use futures::StreamExt;
+use validator::Validate;
 use crate::app::errors::AppErrors;
 use crate::kegiatan::models::Kegiatan;
 use crate::kegiatan::dto::{DocProps, KegiatanDto};
@@ -44,6 +45,8 @@ pub async fn tambah_kegiatan_service(
     db: web::Data<Database>,
 ) -> Result<(), AppErrors> {
     let collection = db.collection("kegiatan");
+
+    payload.validate()?;
     let dok = kegiatan_to_doc(payload, false)?;
 
     collection
@@ -170,6 +173,8 @@ pub async fn ubah_kegiatan_tertentu_service(
 ) -> Result<(), AppErrors> {
     let collection = db.collection("kegiatan");
     let id = ObjectId::with_string(uid.as_str())?;
+
+    payload.validate()?;
     let dok = kegiatan_to_doc(payload, true)?;
 
     collection

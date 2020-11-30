@@ -11,6 +11,7 @@
 //! use crate::kegiatan::dto::{...}
 //! ```
 use serde::Deserialize;
+use validator::Validate;
 
 
 /// Struct sebagai data transfer object untuk _Query URL_.
@@ -25,14 +26,16 @@ pub struct DocProps {
 }
 
 /// Struct sebagai data transfer object dari pengguna.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Validate)]
 pub struct KegiatanDto {
     /// nama kegiatan
+    #[validate(length(min = 3))]
     pub nama: String,
 
     /// kapan kegiatan diadakan
     pub kapan: String,
 
     /// dimana kegiatan diadakan
+    #[validate(length(min = 3))]
     pub ruang: String,
 }
