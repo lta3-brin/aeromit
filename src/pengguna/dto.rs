@@ -37,7 +37,4 @@ pub struct PenggunaDto {
     /// adminkah pengguna
     #[validate]
     pub isadmin: bool,
-
-    /// kapan pengguna dibuat
-    pub dibuat: DateTime<Utc>,
 }
