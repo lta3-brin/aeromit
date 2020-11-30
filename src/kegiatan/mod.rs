@@ -1,8 +1,7 @@
 //! # Module app Aeromit
 //!
-//! Module ini digunakan untuk kelola kegiatan aeromit.
-//! Semua bagian dari module kegiatan seperti route, handlers dan lainnya
-//! digunakan didalam `main.rs`.
+//! Module ini digunakan untuk kelola kegiatan aeromit dan didaftarkan
+//! kedalam `main.rs`.
 //!
 //! <br />
 //!
@@ -11,10 +10,7 @@
 //! ```rust
 //! // masukkan kedalam main.rs
 //! mod kegiatan
-//!
-//! use crate::kegiatan::{...}
 //! ```
-//!
 mod dto;
 mod models;
 mod helpers;
