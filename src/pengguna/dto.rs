@@ -30,6 +30,10 @@ pub struct PenggunaDto {
     #[validate(length(min = 6))]
     pub password: String,
 
+    /// konfirmasi password pengguna
+    #[validate(must_match = "password")]
+    pub repassword: String,
+
     /// adminkah pengguna
     #[validate]
     pub isadmin: bool,
