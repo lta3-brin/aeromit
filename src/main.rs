@@ -1,4 +1,5 @@
 mod app;
+mod pengguna;
 mod kegiatan;
 
 use actix_web::{HttpServer, App, middleware};
