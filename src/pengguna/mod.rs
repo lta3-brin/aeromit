@@ -11,3 +11,4 @@
 //! // masukkan kedalam main.rs
 //! mod pengguna
 //! ```
+mod models;
