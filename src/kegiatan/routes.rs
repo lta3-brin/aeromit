@@ -16,7 +16,9 @@ use actix_web::web;
 use crate::kegiatan::handlers::{
     tambah_kegiatan_handler,
     baca_kegiatan_handler,
-    baca_kegiatan_tertentu_handler
+    baca_kegiatan_tertentu_handler,
+    ubah_kegiatan_tertentu_handler,
+    hapus_kegiatan_tertentu_handler,
 };
 
 /// # Fungsi kegiatan_route
@@ -54,5 +56,7 @@ pub fn kegiatan_route(route: &mut web::ServiceConfig) {
     route
         .service(tambah_kegiatan_handler)
         .service(baca_kegiatan_handler)
-        .service(baca_kegiatan_tertentu_handler);
+        .service(baca_kegiatan_tertentu_handler)
+        .service(ubah_kegiatan_tertentu_handler)
+        .service(hapus_kegiatan_tertentu_handler);
 }
