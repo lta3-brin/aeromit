@@ -14,8 +14,12 @@
 //!
 use actix_web::web;
 use actix_web::web::ServiceConfig;
+use crate::app::handlers::{
+    app_handler,
+    root_handler
+};
 use crate::kegiatan::routes::kegiatan_route;
-use crate::app::handlers::{app_handler, root_handler};
+use crate::pengguna::routes::pengguna_route;
 
 /// # Fungsi root_route
 /// Fungsi ini menerima satu masukan yaitu [_ServiceConfig_](https://docs.rs/actix-web/3.2.0/actix_web/web/struct.ServiceConfig.html)
@@ -47,7 +51,6 @@ use crate::app::handlers::{app_handler, root_handler};
 ///         )
 /// }
 /// ```
-///
 pub fn root_route(route: &mut ServiceConfig) {
     route
         .service(root_handler)
@@ -55,5 +58,6 @@ pub fn root_route(route: &mut ServiceConfig) {
             web::scope("/v1")
                 .service(app_handler)
                 .configure(kegiatan_route)
+                .configure(pengguna_route)
         );
 }

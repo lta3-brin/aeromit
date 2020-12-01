@@ -12,7 +12,6 @@
 //! ```
 use serde::Deserialize;
 use validator::Validate;
-use chrono::{DateTime, Utc};
 
 
 /// Struct sebagai data transfer object dari pengguna.
@@ -35,6 +34,6 @@ pub struct PenggunaDto {
     pub repassword: String,
 
     /// adminkah pengguna
-    #[validate]
-    pub isadmin: bool,
+    #[validate(range(min = 0, max = 1))]
+    pub isadmin: u8,
 }

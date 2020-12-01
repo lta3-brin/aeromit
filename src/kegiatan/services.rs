@@ -20,7 +20,7 @@ use validator::Validate;
 use crate::app::errors::AppErrors;
 use crate::kegiatan::models::Kegiatan;
 use crate::kegiatan::dto::{DocProps, KegiatanDto};
-use crate::kegiatan::helpers::{doc_to_kegiatan, kegiatan_to_doc};
+use crate::kegiatan::helpers::{KegiatanHelpers, KegiatanHelpersTrait};
 
 
 /// # Fungsi tambah_kegiatan_service
@@ -47,7 +47,7 @@ pub async fn tambah_kegiatan_service(
     let collection = db.collection("kegiatan");
 
     payload.validate()?;
-    let dok = kegiatan_to_doc(payload, false)?;
+    let dok = <KegiatanHelpers as KegiatanHelpersTrait>::kegiatan_to_doc(payload, false)?;
 
     collection
         .insert_one(dok, None)
@@ -99,7 +99,7 @@ pub async fn baca_kegiatan_service(
         match result {
             Ok(document) => {
                 let dok = bson::from_document::<Document>(document)?;
-                let keg = doc_to_kegiatan(dok)?;
+                let keg = <KegiatanHelpers as KegiatanHelpersTrait>::doc_to_kegiatan(dok)?;
 
                 kegiatan.push(keg);
             }
@@ -140,7 +140,7 @@ pub async fn baca_kegiatan_tertentu_service(
     match result {
         Some(document) => {
             let dok = bson::from_document::<Document>(document)?;
-            let keg = doc_to_kegiatan(dok)?;
+            let keg = <KegiatanHelpers as KegiatanHelpersTrait>::doc_to_kegiatan(dok)?;
 
             Ok(Some(keg))
         }
@@ -175,7 +175,7 @@ pub async fn ubah_kegiatan_tertentu_service(
     let id = ObjectId::with_string(uid.as_str())?;
 
     payload.validate()?;
-    let dok = kegiatan_to_doc(payload, true)?;
+    let dok = <KegiatanHelpers as KegiatanHelpersTrait>::kegiatan_to_doc(payload, true)?;
 
     collection
         .update_one(doc! {"_id": id}, dok, None)
