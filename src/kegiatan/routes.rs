@@ -11,7 +11,6 @@
 //! ```rust
 //! use crate::kegiatan::routes::kegiatan_route;
 //! ```
-//!
 use actix_web::web;
 use crate::kegiatan::handlers::{
     tambah_kegiatan_handler,
