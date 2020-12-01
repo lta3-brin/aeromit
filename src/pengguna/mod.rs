@@ -14,3 +14,5 @@
 mod dto;
 mod models;
 mod services;
+mod handlers;
+pub mod routes;
