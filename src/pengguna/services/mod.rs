@@ -11,4 +11,5 @@
 //! // masukkan kedalam main.rs
 //! mod services;
 //! ```
+pub mod get_users;
 pub mod create_user;
