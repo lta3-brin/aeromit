@@ -9,15 +9,15 @@
 //! ```rust
 //! use crate::pengguna::services::create_user::{...}
 //! ```
+use chrono::Utc;
 use actix_web::web;
 use validator::Validate;
 use mongodb::{Database, bson::doc};
 use crate::app::errors::AppErrors;
 use crate::pengguna::dto::PenggunaDto;
-use chrono::Utc;
 
 
-/// # Fungsi tambah_pengguna_service
+/// # Fungsi new
 ///
 /// Fungsi ini untuk menambahkan data `Pengguna` baru.
 ///

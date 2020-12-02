@@ -90,18 +90,18 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
 
         if update {
             dok = doc! {
-            "$set": {
+                "$set": {
+                    "nama": payload.0.nama,
+                    "kapan": bson_dt,
+                    "ruang": payload.0.ruang
+                }
+            };
+        } else {
+            dok = doc! {
                 "nama": payload.0.nama,
                 "kapan": bson_dt,
                 "ruang": payload.0.ruang
-            }
-        };
-        } else {
-            dok = doc! {
-            "nama": payload.0.nama,
-            "kapan": bson_dt,
-            "ruang": payload.0.ruang
-        };
+            };
         }
 
         Ok(dok)
