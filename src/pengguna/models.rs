@@ -14,7 +14,7 @@ use chrono::{DateTime, Utc};
 
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Kegiatan {
+pub struct Pengguna {
     #[serde(rename = "_id")]
     pub id: String,
 
