@@ -22,7 +22,7 @@ use actix_web::{
 use crate::app::errors::AppErrors;
 use crate::app::dto::UmpanBalik;
 use crate::pengguna::dto::{PenggunaDto, DocProps};
-use crate::pengguna::services::{create_user, get_users};
+use crate::pengguna::services::{create_user, get_users, get_user};
 use crate::pengguna::models::Pengguna;
 
 
@@ -87,5 +87,37 @@ pub async fn baca_pengguna_handler(
         sukses: true,
         pesan: "Pengguna berhasil ditampilkan".to_string(),
         hasil: seluruh_pengguna,
+    }))
+}
+
+/// # Fungsi baca_pengguna_tertentu_handler
+///
+/// Fungsi ini untuk menampilkan _response_ umpan balik hasil baca pengguna sesuai id
+/// saat mengunjungi _endpoint root_ `v1/pengguna`.
+///
+/// <br />
+///
+/// # Masukan
+///
+/// * `id` - id dokumen yang ingin ditelusuri.
+/// * `db` - mongodb Database type yang dishare melalui _application state_.
+///
+/// <br />
+///
+/// # Keluaran
+///
+/// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
+/// `HttpResponse` dan _Enum_ `AppErrors`.
+#[get("/pengguna/{id}/")]
+pub async fn baca_pengguna_tertentu_handler(
+    id: web::Path<String>,
+    db: web::Data<Database>,
+) -> Result<HttpResponse, AppErrors> {
+    let pengguna_tertentu = get_user::by_id(id, db).await?;
+
+    Ok(HttpResponse::Ok().json(UmpanBalik::<Option<Pengguna>> {
+        sukses: true,
+        pesan: "Pengguna berhasil ditampilkan".to_string(),
+        hasil: pengguna_tertentu,
     }))
 }
