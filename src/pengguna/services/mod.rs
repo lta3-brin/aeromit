@@ -8,7 +8,8 @@
 //! # Contoh
 //!
 //! ```rust
-//! // masukkan kedalam main.rs
+//! // masukkan kedalam mod.rs dari pengguna
 //! mod services;
 //! ```
+pub mod get_users;
 pub mod create_user;

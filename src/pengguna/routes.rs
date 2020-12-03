@@ -1,6 +1,6 @@
-//! # Module Kegiatan Route
+//! # Module Pengguna Route
 //!
-//! Module ini digunakan untuk kelola route kegiatan melalui fungsi yang disediakan.
+//! Module ini digunakan untuk kelola route pengguna melalui fungsi yang disediakan.
 //! Fungsi ini menerima satu parameter yaitu [_ServiceConfig_](https://docs.rs/actix-web/3.2.0/actix_web/web/struct.ServiceConfig.html).
 //! Gunakan fungsi tersebut sebagai parameter dari fungsi [configure](https://docs.rs/actix-web/3.2.0/actix_web/struct.App.html#method.configure).
 //!
@@ -9,18 +9,12 @@
 //! # Contoh
 //!
 //! ```rust
-//! use crate::kegiatan::routes::kegiatan_route;
+//! use crate::pengguna::routes::pengguna_route;
 //! ```
 use actix_web::web;
-use crate::kegiatan::handlers::{
-    tambah_kegiatan_handler,
-    baca_kegiatan_handler,
-    baca_kegiatan_tertentu_handler,
-    ubah_kegiatan_tertentu_handler,
-    hapus_kegiatan_tertentu_handler,
-};
+use crate::pengguna::handlers::{tambah_pengguna_handler, baca_pengguna_handler};
 
-/// # Fungsi kegiatan_route
+/// # Fungsi pengguna_route
 /// Fungsi ini menerima satu masukan yaitu [_ServiceConfig_](https://docs.rs/actix-web/3.2.0/actix_web/web/struct.ServiceConfig.html)
 /// dan digunakan kedalam fungsi [_configure_](https://docs.rs/actix-web/3.2.0/actix_web/struct.App.html#method.configure).
 ///
@@ -51,11 +45,8 @@ use crate::kegiatan::handlers::{
 /// }
 /// ```
 ///
-pub fn kegiatan_route(route: &mut web::ServiceConfig) {
+pub fn pengguna_route(route: &mut web::ServiceConfig) {
     route
-        .service(tambah_kegiatan_handler)
-        .service(baca_kegiatan_handler)
-        .service(baca_kegiatan_tertentu_handler)
-        .service(ubah_kegiatan_tertentu_handler)
-        .service(hapus_kegiatan_tertentu_handler);
+        .service(tambah_pengguna_handler)
+        .service(baca_pengguna_handler);
 }
