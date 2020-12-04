@@ -26,7 +26,7 @@ pub trait PenggunaHelpersTrait {
         payload: web::Form<PenggunaDto>,
         update: bool
     ) -> Result<Document, AppErrors>;
-    fn hash_password(password: String);
+    fn hash_password(password: String) -> Result<String, AppErrors>;
 }
 
 /// Struct untuk helpers bagian pengguna
@@ -142,7 +142,7 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
         };
 
         let hash = argon2::hash_encoded(
-            payload.0.password.as_bytes(),
+            password.as_bytes(),
             salt.as_bytes(),
             &config
         )?;
