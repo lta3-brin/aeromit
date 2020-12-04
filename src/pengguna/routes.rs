@@ -13,9 +13,9 @@
 //! ```
 use actix_web::web;
 use crate::pengguna::handlers::{
-    tambah_pengguna_handler,
-    baca_pengguna_handler,
-    baca_pengguna_tertentu_handler
+    create_user,
+    get_users,
+    get_user,
 };
 
 /// # Fungsi pengguna_route
@@ -51,7 +51,7 @@ use crate::pengguna::handlers::{
 ///
 pub fn pengguna_route(route: &mut web::ServiceConfig) {
     route
-        .service(tambah_pengguna_handler)
-        .service(baca_pengguna_handler)
-        .service(baca_pengguna_tertentu_handler);
+        .service(create_user::new)
+        .service(get_users::all)
+        .service(get_user::by_id);
 }

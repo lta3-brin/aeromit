@@ -32,7 +32,8 @@ pub enum AppErrors {
     BsonDeserializeError(bson::de::Error),
     ParseOidError(bson::oid::Error),
     ParseChronoError(chrono::ParseError),
-    InputValidationError(validator::ValidationErrors)
+    InputValidationError(validator::ValidationErrors),
+    HashingError(argon2::Error),
 }
 
 /// Implementasi `AppErrors` apabila terjadi kesalahan seputar `env::VarError`
@@ -88,6 +89,13 @@ impl From<chrono::ParseError> for AppErrors {
 impl From<validator::ValidationErrors> for AppErrors {
     fn from(err: validator::ValidationErrors) -> Self {
         Self::InputValidationError(err)
+    }
+}
+
+/// Implementasi `AppErrors` apabila terjadi kesalahan seputar `chrono::ParseError`
+impl From<argon2::Error> for AppErrors {
+    fn from(err: argon2::Error) -> Self {
+        Self::HashingError(err)
     }
 }
 

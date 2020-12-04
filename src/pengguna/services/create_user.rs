@@ -15,6 +15,7 @@ use validator::Validate;
 use mongodb::{Database, bson::doc};
 use crate::app::errors::AppErrors;
 use crate::pengguna::dto::PenggunaDto;
+use crate::pengguna::helpers::{PenggunaHelpers, PenggunaHelpersTrait};
 
 
 /// # Fungsi new
@@ -47,12 +48,14 @@ pub async fn new(
         admin = true
     } else { admin = false }
 
+    let hash = <PenggunaHelpers as PenggunaHelpersTrait>::hash_password(payload.0.password)?;
+
     collection
         .insert_one(
             doc! {
                 "nama": payload.0.nama,
                 "email": payload.0.email,
-                "password": payload.0.password,
+                "password": hash,
                 "isadmin": admin,
                 "dibuat": Utc::now(),
             },
