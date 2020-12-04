@@ -12,7 +12,11 @@
 //! use crate::pengguna::routes::pengguna_route;
 //! ```
 use actix_web::web;
-use crate::pengguna::handlers::{tambah_pengguna_handler, baca_pengguna_handler};
+use crate::pengguna::handlers::{
+    create_user,
+    get_users,
+    get_user,
+};
 
 /// # Fungsi pengguna_route
 /// Fungsi ini menerima satu masukan yaitu [_ServiceConfig_](https://docs.rs/actix-web/3.2.0/actix_web/web/struct.ServiceConfig.html)
@@ -47,6 +51,7 @@ use crate::pengguna::handlers::{tambah_pengguna_handler, baca_pengguna_handler};
 ///
 pub fn pengguna_route(route: &mut web::ServiceConfig) {
     route
-        .service(tambah_pengguna_handler)
-        .service(baca_pengguna_handler);
+        .service(create_user::new)
+        .service(get_users::all)
+        .service(get_user::by_id);
 }
