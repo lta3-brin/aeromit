@@ -9,9 +9,11 @@
 //! ```rust
 //! use crate::pengguna::services::{...}
 //! ```
-use actix_web::web;
+use std::env;
 use chrono::Utc;
+use actix_web::web;
 use mongodb::bson::{Document, doc};
+use argon2::{self, Config, ThreadMode, Variant, Version};
 use crate::app::errors::AppErrors;
 use crate::pengguna::dto::PenggunaDto;
 use crate::pengguna::models::Pengguna;
@@ -24,6 +26,7 @@ pub trait PenggunaHelpersTrait {
         payload: web::Form<PenggunaDto>,
         update: bool
     ) -> Result<Document, AppErrors>;
+    fn hash_password(password: String);
 }
 
 /// Struct untuk helpers bagian pengguna
@@ -106,6 +109,45 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
         }
 
         Ok(dok)
+    }
+
+    /// # Fungsi hash_password
+    ///
+    /// Fungsi ini untuk melakukan hash pada password.
+    ///
+    /// <br />
+    ///
+    /// # Masukan
+    ///
+    /// * `password` - password dengan type String.
+    ///
+    /// <br />
+    ///
+    /// # Keluaran
+    ///
+    /// * `Result<Document, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+    /// `Document` dan _Enum_ `AppErrors`.
+    fn hash_password(password: String) -> Result<String, AppErrors> {
+        let salt = env::var("APP_SALT")?;
+        let config = Config {
+            variant: Variant::Argon2i,
+            version: Version::Version13,
+            mem_cost: 65536,
+            time_cost: 5,
+            lanes: 4,
+            thread_mode: ThreadMode::Parallel,
+            secret: &[],
+            ad: &[],
+            hash_length: 32
+        };
+
+        let hash = argon2::hash_encoded(
+            payload.0.password.as_bytes(),
+            salt.as_bytes(),
+            &config
+        )?;
+
+        Ok(hash)
     }
 }
 
