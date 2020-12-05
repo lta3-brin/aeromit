@@ -10,22 +10,22 @@
 //! use crate::pengguna::services::{...}
 //! ```
 use std::env;
-use chrono::Utc;
+use chrono::{Utc, DateTime};
 use actix_web::web;
 use mongodb::bson::{Document, doc};
 use argon2::{self, Config, ThreadMode, Variant, Version};
 use crate::app::errors::AppErrors;
-use crate::pengguna::dto::PenggunaDto;
-use crate::pengguna::models::Pengguna;
+use crate::pengguna::{
+    models::Pengguna,
+    dto::{PenggunaDto, UbahPenggunaDto},
+};
 
 
 /// Trait yang digunakan sebagai kerangka fungsi yang dibutuhkan sebagai helpers
 pub trait PenggunaHelpersTrait {
     fn doc_to_pengguna(dok: Document) -> Result<Pengguna, AppErrors>;
-    fn pengguna_to_doc(
-        payload: web::Form<PenggunaDto>,
-        update: bool
-    ) -> Result<Document, AppErrors>;
+    fn create_to_doc(payload: web::Form<PenggunaDto>) -> Result<Document, AppErrors>;
+    fn update_to_doc(payload: web::Form<UbahPenggunaDto>) -> Result<Document, AppErrors>;
     fn hash_password(password: String) -> Result<String, AppErrors>;
 }
 
@@ -51,11 +51,18 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
     /// `Pengguna` dan _Enum_ `AppErrors`.
     fn doc_to_pengguna(dok: Document) -> Result<Pengguna, AppErrors> {
         let id = dok.get_object_id("_id")?;
-        let kapan = dok.get_datetime("dibuat")?;
         let nama = dok.get_str("nama")?;
         let email = dok.get_str("email")?;
         let password = dok.get_str("password")?;
         let admin = dok.get_bool("isadmin")?;
+        let kapan = dok.get_datetime("dibuat")?;
+
+        let diubah: Option<DateTime<Utc>>;
+        if let Some(data) = dok.get("lastModified") {
+            if let Some(kapan) = data.as_datetime() {
+                diubah = Some(*kapan)
+            } else { diubah = None }
+        } else { diubah = None }
 
         Ok(Pengguna {
             id: id.to_hex(),
@@ -63,20 +70,20 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
             email: email.to_string(),
             password: password.to_string(),
             isadmin: admin,
-            dibuat: *kapan
+            dibuat: *kapan,
+            last_modified: diubah,
         })
     }
 
-    /// # Fungsi pengguna_to_doc
+    /// # Fungsi create_to_doc
     ///
-    /// Fungsi ini untuk mengubah _struct_ `Pengguna` ke _Mongo Document_.
+    /// Fungsi ini untuk mengubah _struct_ `PenggunaDto` ke _Mongo Document_.
     ///
     /// <br />
     ///
     /// # Masukan
     ///
     /// * `payload` - masukan dengan _type Struct_ `Pengguna` berupa _DTO_.
-    /// * `update` - status apakah update atau tidak.
     ///
     /// <br />
     ///
@@ -84,31 +91,44 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
     ///
     /// * `Result<Document, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
     /// `Document` dan _Enum_ `AppErrors`.
-    fn pengguna_to_doc(
-        payload: web::Form<PenggunaDto>,
-        update: bool
-    ) -> Result<Document, AppErrors> {
-        let dok: Document;
+    fn create_to_doc(payload: web::Form<PenggunaDto>) -> Result<Document, AppErrors> {
         let admin = is_admin(payload.0.isadmin);
 
-        if update {
-            dok = doc! {
-                "$set": {
-                    "nama": payload.0.nama,
-                    "isadmin": admin
-                }
-            };
-        } else {
-            dok = doc! {
-                "nama": payload.0.nama,
-                "dibuat": Utc::now(),
-                "email": payload.0.email,
-                "password": payload.0.password,
-                "isadmin": admin
-            };
-        }
+        Ok(doc! {
+            "nama": payload.0.nama,
+            "dibuat": Utc::now(),
+            "email": payload.0.email,
+            "password": payload.0.password,
+            "isadmin": admin
+        })
+    }
 
-        Ok(dok)
+    /// # Fungsi update_to_doc
+    ///
+    /// Fungsi ini untuk mengubah _struct_ `UbahPenggunaDto` ke _Mongo Document_.
+    ///
+    /// <br />
+    ///
+    /// # Masukan
+    ///
+    /// * `payload` - masukan dengan _type Struct_ `Pengguna` berupa _DTO_.
+    ///
+    /// <br />
+    ///
+    /// # Keluaran
+    ///
+    /// * `Result<Document, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+    /// `Document` dan _Enum_ `AppErrors`.
+    fn update_to_doc(payload: web::Form<UbahPenggunaDto>) -> Result<Document, AppErrors> {
+        let admin = is_admin(payload.0.isadmin);
+
+        Ok(doc! {
+            "$set": {
+                "nama": payload.0.nama,
+                "isadmin": admin
+            },
+            "$currentDate": { "lastModified": true }
+        })
     }
 
     /// # Fungsi hash_password

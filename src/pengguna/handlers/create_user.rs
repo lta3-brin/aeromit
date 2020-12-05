@@ -1,6 +1,6 @@
 //! # Module Create User Handler
 //!
-//! Module ini digunakan untuk membuat pengguna baru untuk digunakan di `handlers`.
+//! Module ini digunakan untuk membuat pengguna baru sebagai `handlers`.
 //!
 //! <br />
 //!

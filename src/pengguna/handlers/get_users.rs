@@ -1,6 +1,6 @@
 //! # Module Get Users Handler
 //!
-//! Module ini digunakan untuk ambil keseluruhan pengguna untuk digunakan di `handlers`.
+//! Module ini digunakan untuk ambil keseluruhan pengguna sebagai `handlers`.
 //!
 //! <br />
 //!
