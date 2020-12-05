@@ -1,6 +1,6 @@
 //! # Module Get User Handler
 //!
-//! Module ini digunakan untuk ambil pengguna berdasarkan id untuk digunakan di `handlers`.
+//! Module ini digunakan untuk ambil pengguna berdasarkan id sebagai `handlers`.
 //!
 //! <br />
 //!
