@@ -7,14 +7,17 @@
 //! # Contoh
 //!
 //! ```rust
-//! use crate::kegiatan::services::{...}
+//! use crate::kegiatan::helpers::{...}
 //! ```
 use actix_web::web;
 use chrono::{DateTime, Utc};
 use mongodb::bson::{Document, Bson, doc};
-use crate::app::errors::AppErrors;
-use crate::kegiatan::models::Kegiatan;
 use crate::kegiatan::dto::KegiatanDto;
+use crate::kegiatan::models::Kegiatan;
+use crate::app::{
+    errors::AppErrors,
+    helpers::{AppHelpers, AppHelpersTrait}
+};
 
 
 /// Trait yang digunakan sebagai kerangka fungsi yang dibutuhkan sebagai helpers
@@ -52,11 +55,16 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
         let nama = dok.get_str("nama")?;
         let ruang = dok.get_str("ruang")?;
 
+        let diubah = <AppHelpers as AppHelpersTrait>::last_modified(
+            dok.get("lastModified")
+        );
+
         Ok(Kegiatan {
             id: id.to_hex(),
             nama: nama.to_string(),
             kapan: *kapan,
             ruang: ruang.to_string(),
+            last_modified: diubah
         })
     }
 
