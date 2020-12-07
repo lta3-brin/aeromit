@@ -7,14 +7,17 @@
 //! # Contoh
 //!
 //! ```rust
-//! use crate::pengguna::services::{...}
+//! use crate::pengguna::helpers::{...}
 //! ```
 use std::env;
-use chrono::{Utc, DateTime};
+use chrono::Utc;
 use actix_web::web;
 use mongodb::bson::{Document, doc};
 use argon2::{self, Config, ThreadMode, Variant, Version};
-use crate::app::errors::AppErrors;
+use crate::app::{
+    errors::AppErrors,
+    helpers::{AppHelpers, AppHelpersTrait}
+};
 use crate::pengguna::{
     models::Pengguna,
     dto::{PenggunaDto, UbahPenggunaDto},
@@ -57,12 +60,9 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
         let admin = dok.get_bool("isadmin")?;
         let kapan = dok.get_datetime("dibuat")?;
 
-        let diubah: Option<DateTime<Utc>>;
-        if let Some(data) = dok.get("lastModified") {
-            if let Some(kapan) = data.as_datetime() {
-                diubah = Some(*kapan)
-            } else { diubah = None }
-        } else { diubah = None }
+        let diubah = <AppHelpers as AppHelpersTrait>::last_modified(
+            dok.get("lastModified")
+        );
 
         Ok(Pengguna {
             id: id.to_hex(),
