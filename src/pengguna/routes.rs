@@ -17,6 +17,7 @@ use crate::pengguna::handlers::{
     get_users,
     get_user,
     update_user,
+    delete_user,
 };
 
 /// # Fungsi pengguna_route
@@ -55,5 +56,6 @@ pub fn pengguna_route(route: &mut web::ServiceConfig) {
         .service(create_user::new)
         .service(get_users::all)
         .service(get_user::by_id)
-        .service(update_user::save);
+        .service(update_user::save)
+        .service(delete_user::by_id);
 }

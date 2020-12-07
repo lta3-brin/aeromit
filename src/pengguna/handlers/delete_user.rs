@@ -1,31 +1,30 @@
-//! # Module Update User Handler
+//! # Module Delete User Handler
 //!
-//! Module ini digunakan untuk ubah pengguna berdasarkan id sebagai `handlers`.
+//! Module ini digunakan untuk hapus pengguna berdasarkan id sebagai `handlers`.
 //!
 //! <br />
 //!
 //! # Contoh
 //!
 //! ```rust
-//! use crate::pengguna::handlers::update_user::{...}
+//! use crate::pengguna::handlers::delete_user::{...}
 //! ```
 use mongodb::Database;
 use actix_web::{
     web,
-    put,
+    delete,
     HttpResponse,
 };
-use crate::app::errors::AppErrors;
-use crate::app::dto::UmpanBalik;
-use crate::pengguna::{
-    services::update_user,
-    dto::UbahPenggunaDto,
+use crate::app::{
+    dto::UmpanBalik,
+    errors::AppErrors,
 };
+use crate::pengguna::services::delete_user;
 
 
-/// # Fungsi save
+/// # Fungsi by_id
 ///
-/// Fungsi ini untuk menampilkan _response_ umpan balik hasil baca pengguna sesuai id
+/// Fungsi ini untuk menampilkan _response_ umpan balik hasil hapus pengguna sesuai id
 /// saat mengunjungi _endpoint root_ `v1/pengguna`.
 ///
 /// <br />
@@ -41,17 +40,16 @@ use crate::pengguna::{
 ///
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
-#[put("/pengguna/{id}/")]
-pub async fn save(
+#[delete("/pengguna/{id}/")]
+pub async fn by_id(
     id: web::Path<String>,
-    payload: web::Form<UbahPenggunaDto>,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    let count = update_user::save(id, payload, db).await?;
+    let count = delete_user::by_id(id, db).await?;
 
     Ok(HttpResponse::Ok().json(UmpanBalik::<i64> {
         sukses: true,
-        pesan: "Pengguna berhasil disimpan".to_string(),
+        pesan: "Pengguna berhasil dihapus".to_string(),
         hasil: count,
     }))
 }
