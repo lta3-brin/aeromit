@@ -33,4 +33,8 @@ pub struct Pengguna {
 
     /// kapan pengguna dibuat
     pub dibuat: DateTime<Utc>,
+
+    /// kapan pengguna diubah
+    #[serde(rename = "lastModified")]
+    pub last_modified: Option<DateTime<Utc>>,
 }

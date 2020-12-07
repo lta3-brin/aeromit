@@ -47,3 +47,15 @@ pub struct PenggunaDto {
     #[validate(range(min = 0, max = 1))]
     pub isadmin: u8,
 }
+
+/// Struct sebagai data transfer object untuk ubah pengguna.
+#[derive(Debug, Deserialize, Validate)]
+pub struct UbahPenggunaDto {
+    /// nama pengguna
+    #[validate(length(min = 3))]
+    pub nama: String,
+
+    /// adminkah pengguna
+    #[validate(range(min = 0, max = 1))]
+    pub isadmin: u8,
+}

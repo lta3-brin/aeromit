@@ -1,29 +1,29 @@
-//! # Module Get User Handler
+//! # Module Update User Handler
 //!
-//! Module ini digunakan untuk ambil pengguna berdasarkan id sebagai `handlers`.
+//! Module ini digunakan untuk ubah pengguna berdasarkan id sebagai `handlers`.
 //!
 //! <br />
 //!
 //! # Contoh
 //!
 //! ```rust
-//! use crate::pengguna::handlers::get_user::{...}
+//! use crate::pengguna::handlers::update_user::{...}
 //! ```
 use mongodb::Database;
 use actix_web::{
     web,
-    get,
+    put,
     HttpResponse,
 };
 use crate::app::errors::AppErrors;
 use crate::app::dto::UmpanBalik;
 use crate::pengguna::{
-    models::Pengguna,
-    services::get_user,
+    services::update_user,
+    dto::UbahPenggunaDto,
 };
 
 
-/// # Fungsi by_id
+/// # Fungsi save
 ///
 /// Fungsi ini untuk menampilkan _response_ umpan balik hasil baca pengguna sesuai id
 /// saat mengunjungi _endpoint root_ `v1/pengguna`.
@@ -41,16 +41,17 @@ use crate::pengguna::{
 ///
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
-#[get("/pengguna/{id}/")]
-pub async fn by_id(
+#[put("/pengguna/{id}/")]
+pub async fn save(
     id: web::Path<String>,
+    payload: web::Form<UbahPenggunaDto>,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    let pengguna_tertentu = get_user::by_id(id, db).await?;
+    update_user::save(id, payload, db).await?;
 
-    Ok(HttpResponse::Ok().json(UmpanBalik::<Option<Pengguna>> {
+    Ok(HttpResponse::Ok().json(UmpanBalik::<()> {
         sukses: true,
-        pesan: "Pengguna berhasil ditampilkan".to_string(),
-        hasil: pengguna_tertentu,
+        pesan: "Pengguna berhasil disimpan".to_string(),
+        hasil: (),
     }))
 }
