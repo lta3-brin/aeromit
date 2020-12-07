@@ -47,11 +47,11 @@ pub async fn save(
     payload: web::Form<UbahPenggunaDto>,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    update_user::save(id, payload, db).await?;
+    let count = update_user::save(id, payload, db).await?;
 
-    Ok(HttpResponse::Ok().json(UmpanBalik::<()> {
+    Ok(HttpResponse::Ok().json(UmpanBalik::<i64> {
         sukses: true,
         pesan: "Pengguna berhasil disimpan".to_string(),
-        hasil: (),
+        hasil: count,
     }))
 }
