@@ -31,6 +31,9 @@ pub struct Pengguna {
     /// adminkah pengguna
     pub isadmin: bool,
 
+    /// masih aktifkah pengguna
+    pub isactive: bool,
+
     /// kapan pengguna dibuat
     pub dibuat: DateTime<Utc>,
 
