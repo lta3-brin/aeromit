@@ -9,10 +9,9 @@
 //! ```rust
 //! use crate::pengguna::services::create_user::{...}
 //! ```
-use chrono::Utc;
 use actix_web::web;
 use validator::Validate;
-use mongodb::{Database, bson::doc};
+use mongodb::Database;
 use crate::app::errors::AppErrors;
 use crate::pengguna::{
     dto::PenggunaDto,
@@ -41,29 +40,14 @@ pub async fn new(
     payload: web::Form<PenggunaDto>,
     db: web::Data<Database>
 ) -> Result<(), AppErrors> {
-    let admin: bool;
     let collection = db.collection("pengguna");
 
     payload.validate()?;
 
-    if payload.0.isadmin == 1 {
-        admin = true
-    } else { admin = false }
-
-    let hash = <PenggunaHelpers as PenggunaHelpersTrait>::hash_password(payload.0.password)?;
+    let dok = <PenggunaHelpers as PenggunaHelpersTrait>::create_to_doc(payload)?;
 
     collection
-        .insert_one(
-            doc! {
-                "nama": payload.0.nama,
-                "email": payload.0.email,
-                "password": hash,
-                "isadmin": admin,
-                "isactive": true,
-                "dibuat": Utc::now(),
-            },
-            None
-        )
+        .insert_one(dok,None)
         .await?;
 
     Ok(())
