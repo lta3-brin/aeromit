@@ -132,7 +132,7 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
             "$set": {
                 "nama": payload.0.nama,
                 "isadmin": admin,
-                "isaktif": aktif,
+                "isactive": aktif,
             },
             "$currentDate": { "lastModified": true }
         })
