@@ -46,6 +46,10 @@ pub struct PenggunaDto {
     /// adminkah pengguna
     #[validate(range(min = 0, max = 1))]
     pub isadmin: u8,
+
+    /// adminkah pengguna
+    #[validate(range(min = 0, max = 1))]
+    pub isactive: u8,
 }
 
 /// Struct sebagai data transfer object untuk ubah pengguna.
@@ -58,4 +62,8 @@ pub struct UbahPenggunaDto {
     /// adminkah pengguna
     #[validate(range(min = 0, max = 1))]
     pub isadmin: u8,
+
+    /// aktifkah pengguna
+    #[validate(range(min = 0, max = 1))]
+    pub isactive: u8,
 }

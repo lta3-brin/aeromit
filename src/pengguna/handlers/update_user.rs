@@ -49,9 +49,17 @@ pub async fn save(
 ) -> Result<HttpResponse, AppErrors> {
     let count = update_user::save(id, payload, db).await?;
 
-    Ok(HttpResponse::Ok().json(UmpanBalik::<i64> {
-        sukses: true,
-        pesan: "Pengguna berhasil disimpan".to_string(),
-        hasil: count,
-    }))
+    if count == 0 {
+        Ok(HttpResponse::NotFound().json(UmpanBalik::<i64> {
+            sukses: false,
+            pesan: "Pengguna tidak ditemukan".to_string(),
+            hasil: count,
+        }))
+    } else {
+        Ok(HttpResponse::Ok().json(UmpanBalik::<i64> {
+            sukses: true,
+            pesan: "Pengguna berhasil disimpan".to_string(),
+            hasil: count,
+        }))
+    }
 }

@@ -61,7 +61,7 @@ pub async fn all(
         .build();
 
     let mut cursor = collection
-        .find(None, options)
+        .find(doc! {"isactive": true}, options)
         .await?;
 
     while let Some(result) = cursor.next().await {
