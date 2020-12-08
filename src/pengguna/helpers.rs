@@ -58,6 +58,7 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
         let email = dok.get_str("email")?;
         let password = dok.get_str("password")?;
         let admin = dok.get_bool("isadmin")?;
+        let aktif = dok.get_bool("isactive")?;
         let kapan = dok.get_datetime("dibuat")?;
 
         let diubah = <AppHelpers as AppHelpersTrait>::last_modified(
@@ -70,6 +71,7 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
             email: email.to_string(),
             password: password.to_string(),
             isadmin: admin,
+            isactive: aktif,
             dibuat: *kapan,
             last_modified: diubah,
         })
@@ -153,7 +155,7 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
             variant: Variant::Argon2i,
             version: Version::Version13,
             mem_cost: 65536,
-            time_cost: 5,
+            time_cost: 3,
             lanes: 4,
             thread_mode: ThreadMode::Parallel,
             secret: &[],
