@@ -48,9 +48,17 @@ pub async fn by_id(
 ) -> Result<HttpResponse, AppErrors> {
     let pengguna_tertentu = get_user::by_id(id, db).await?;
 
-    Ok(HttpResponse::Ok().json(UmpanBalik::<Option<Pengguna>> {
-        sukses: true,
-        pesan: "Pengguna berhasil ditampilkan".to_string(),
-        hasil: pengguna_tertentu,
-    }))
+    if pengguna_tertentu.is_none() {
+        Ok(HttpResponse::NotFound().json(UmpanBalik::<Option<Pengguna>> {
+            sukses: false,
+            pesan: "Pengguna tidak ditemukan".to_string(),
+            hasil: pengguna_tertentu,
+        }))
+    } else {
+        Ok(HttpResponse::Ok().json(UmpanBalik::<Option<Pengguna>> {
+            sukses: true,
+            pesan: "Pengguna berhasil ditampilkan".to_string(),
+            hasil: pengguna_tertentu,
+        }))
+    }
 }
