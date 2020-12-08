@@ -59,6 +59,7 @@ pub async fn new(
                 "email": payload.0.email,
                 "password": hash,
                 "isadmin": admin,
+                "isactive": true,
                 "dibuat": Utc::now(),
             },
             None
