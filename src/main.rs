@@ -2,10 +2,13 @@ mod app;
 mod pengguna;
 mod kegiatan;
 
-use actix_web::{HttpServer, App, middleware};
-use crate::app::routes::root_route;
-use crate::app::errors::AppErrors;
-use crate::app::configs::AppConfigs;
+use actix_web::{HttpServer, App};
+use crate::app::{
+    errors::AppErrors,
+    routes::root_route,
+    configs::AppConfigs,
+    middlewares::Middlewares,
+};
 
 
 #[actix_web::main]
@@ -16,8 +19,9 @@ async fn main() -> Result<(), AppErrors> {
     let db = AppConfigs::database_connection().await?;
     let server = HttpServer::new(move || {
         App::new()
-            .wrap(middleware::Logger::default())
-            .wrap(middleware::NormalizePath::default())
+            .wrap(Middlewares::build_logger())
+            .wrap(Middlewares::normalize_path())
+            .wrap(Middlewares::handle_session())
             .data(db.clone())
             .configure(root_route)
     });
