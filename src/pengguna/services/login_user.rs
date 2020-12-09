@@ -12,6 +12,7 @@
 use argon2;
 use actix_web::web;
 use validator::Validate;
+use jsonwebtoken::{encode, Header, EncodingKey};
 use mongodb::{
     Database,
     bson::{self, doc, Document},
@@ -22,6 +23,9 @@ use crate::pengguna::helpers::{
     PenggunaHelpers,
     PenggunaHelpersTrait
 };
+use crate::pengguna::models::Klaim;
+use chrono::{Utc, Duration};
+use std::env;
 
 
 /// # Fungsi verify
@@ -40,11 +44,11 @@ use crate::pengguna::helpers::{
 /// # Keluaran
 ///
 /// * `Result<bool, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
-/// `bool` dan _Enum_ `AppErrors`.
+/// `Option<String>` dan _Enum_ `AppErrors`.
 pub async fn verify(
     payload: web::Form<LoginPenggunaDto>,
     db: web::Data<Database>
-) -> Result<bool, AppErrors> {
+) -> Result<Option<String>, AppErrors> {
     let collection = db.collection("pengguna");
 
     payload.validate()?;
@@ -64,8 +68,21 @@ pub async fn verify(
                 payload.0.password.as_bytes()
             )?;
 
-            Ok(valid)
+            if valid {
+                let iat = Utc::now();
+                let exp = iat + Duration::days(7);
+                let klm = Klaim::new(peg.nama, iat, exp);
+                let secret = env::var("APP_SECRET")?;
+
+                let token = encode(
+                    &Header::default(),
+                    &klm,
+                    &EncodingKey::from_secret(secret.as_bytes())
+                )?;
+
+                Ok(Some(token))
+            } else { Ok(None) }
         }
-        None => Ok(false)
+        None => Ok(None)
     }
 }

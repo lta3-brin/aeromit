@@ -34,6 +34,7 @@ pub enum AppErrors {
     ParseChronoError(chrono::ParseError),
     InputValidationError(validator::ValidationErrors),
     HashingError(argon2::Error),
+    JwtError(jsonwebtoken::errors::Error),
 }
 
 /// Implementasi `AppErrors` apabila terjadi kesalahan seputar `env::VarError`
@@ -99,6 +100,13 @@ impl From<argon2::Error> for AppErrors {
     }
 }
 
+/// Implementasi `AppErrors` apabila terjadi kesalahan seputar `jsonwebtoken::errors::Error`
+impl From<jsonwebtoken::errors::Error> for AppErrors {
+    fn from(err: jsonwebtoken::errors::Error) -> Self {
+        Self::JwtError(err)
+    }
+}
+
 /// Menampilkan kesalahan yang mungkin terjadi dari `AppErrors` kedalam bentuk `ResponseError`
 impl ResponseError for AppErrors {
     fn status_code(&self) -> StatusCode {
@@ -106,6 +114,7 @@ impl ResponseError for AppErrors {
             AppErrors::ParseOidError(..) => StatusCode::BAD_REQUEST,
             AppErrors::ParseChronoError(..) => StatusCode::BAD_REQUEST,
             AppErrors::InputValidationError(..) => StatusCode::BAD_REQUEST,
+            AppErrors::JwtError(..) => StatusCode::NOT_ACCEPTABLE,
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
