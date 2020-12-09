@@ -36,7 +36,7 @@ use crate::pengguna::{
 ///
 /// # Keluaran
 ///
-/// * `Result<(), AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// * `Result<Option<Pengguna>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
 /// `Option<Pengguna>` dan _Enum_ `AppErrors`.
 pub async fn by_id(
     uid: web::Path<String>,
