@@ -15,6 +15,7 @@ use actix_web::{
     post,
     HttpResponse,
 };
+use actix_session::Session;
 use crate::app::errors::AppErrors;
 use crate::app::dto::UmpanBalik;
 use crate::pengguna::{
@@ -33,6 +34,7 @@ use crate::pengguna::{
 /// # Masukan
 ///
 /// * `payload` - inputan pengguna berupa email dan password.
+/// * `session` - actix session.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -44,15 +46,16 @@ use crate::pengguna::{
 #[post("/pengguna/login/")]
 pub async fn masuk(
     payload: web::Form<LoginPenggunaDto>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    let valid = login_user::verify(payload, db).await?;
+    let valid = login_user::verify(payload, session, db).await?;
 
     if valid.is_none() {
-        Ok(HttpResponse::NotFound().json(UmpanBalik::<()> {
+        Ok(HttpResponse::NotFound().json(UmpanBalik::<Option<String>> {
             sukses: false,
             pesan: "Email/Password tidak ditemukan".to_string(),
-            hasil: (),
+            hasil: valid,
         }))
     } else {
         Ok(HttpResponse::Accepted().json(UmpanBalik::<Option<String>> {
