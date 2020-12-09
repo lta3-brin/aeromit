@@ -66,3 +66,15 @@ pub struct UbahPenggunaDto {
     /// aktifkah pengguna
     pub isactive: bool,
 }
+
+/// Struct sebagai login data transfer object dari pengguna.
+#[derive(Debug, Deserialize, Validate)]
+pub struct LoginPenggunaDto {
+    /// email pengguna
+    #[validate(email)]
+    pub email: String,
+
+    /// password pengguna
+    #[validate(length(min = 6))]
+    pub password: String,
+}
