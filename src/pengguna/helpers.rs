@@ -94,7 +94,6 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
     /// * `Result<Document, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
     /// `Document` dan _Enum_ `AppErrors`.
     fn create_to_doc(payload: web::Form<PenggunaDto>) -> Result<Document, AppErrors> {
-        let admin = is_it_true(payload.0.isadmin);
         let hash = <PenggunaHelpers as PenggunaHelpersTrait>::hash_password(payload.0.password)?;
 
         Ok(doc! {
@@ -102,7 +101,7 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
             "email": payload.0.email,
             "dibuat": Utc::now(),
             "password": hash,
-            "isadmin": admin,
+            "isadmin": payload.0.isadmin,
             "isactive": true,
             "dibuat": Utc::now(),
         })
@@ -125,14 +124,11 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
     /// * `Result<Document, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
     /// `Document` dan _Enum_ `AppErrors`.
     fn update_to_doc(payload: web::Form<UbahPenggunaDto>) -> Result<Document, AppErrors> {
-        let admin = is_it_true(payload.0.isadmin);
-        let aktif = is_it_true(payload.0.isactive);
-
         Ok(doc! {
             "$set": {
                 "nama": payload.0.nama,
-                "isadmin": admin,
-                "isactive": aktif,
+                "isadmin": payload.0.isadmin,
+                "isactive": payload.0.isactive,
             },
             "$currentDate": { "lastModified": true }
         })
@@ -176,11 +172,4 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
 
         Ok(hash)
     }
-}
-
-/// Fungsi untuk cek status
-fn is_it_true(status: u8) -> bool {
-    if status == 0 {
-        false
-    } else { true }
 }
