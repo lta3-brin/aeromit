@@ -54,6 +54,11 @@ pub async fn all(
         doc_limit = limit;
     } else { doc_limit = 10; }
 
+    let is_active: bool;
+    if let Some(aktif) = doc_props.isactive {
+        is_active = aktif;
+    } else { is_active = true; }
+
     let options = FindOptions::builder()
         .sort(doc! { "nama": -1 })
         .limit(doc_limit)
@@ -61,7 +66,7 @@ pub async fn all(
         .build();
 
     let mut cursor = collection
-        .find(doc! {"isactive": true}, options)
+        .find(doc! {"isactive": is_active}, options)
         .await?;
 
     while let Some(result) = cursor.next().await {
