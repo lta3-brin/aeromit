@@ -22,6 +22,9 @@ pub struct DocProps {
 
     /// seberapa banyak dokumen yang dilewati
     pub skip: Option<i64>,
+
+    /// saring pengguna berdasarkan status aktif
+    pub isactive: Option<bool>,
 }
 
 /// Struct sebagai data transfer object dari pengguna.
@@ -44,8 +47,10 @@ pub struct PenggunaDto {
     pub repassword: String,
 
     /// adminkah pengguna
-    #[validate(range(min = 0, max = 1))]
-    pub isadmin: u8,
+    pub isadmin: bool,
+
+    /// adminkah pengguna
+    pub isactive: bool,
 }
 
 /// Struct sebagai data transfer object untuk ubah pengguna.
@@ -56,6 +61,20 @@ pub struct UbahPenggunaDto {
     pub nama: String,
 
     /// adminkah pengguna
-    #[validate(range(min = 0, max = 1))]
-    pub isadmin: u8,
+    pub isadmin: bool,
+
+    /// aktifkah pengguna
+    pub isactive: bool,
+}
+
+/// Struct sebagai login data transfer object dari pengguna.
+#[derive(Debug, Deserialize, Validate)]
+pub struct LoginPenggunaDto {
+    /// email pengguna
+    #[validate(email)]
+    pub email: String,
+
+    /// password pengguna
+    #[validate(length(min = 6))]
+    pub password: String,
 }

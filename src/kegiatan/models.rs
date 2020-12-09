@@ -26,4 +26,8 @@ pub struct Kegiatan {
 
     /// dimana kegiatan diadakan
     pub ruang: String,
+
+    /// kapan kegiatan diubah
+    #[serde(rename = "lastModified")]
+    pub last_modified: Option<DateTime<Utc>>,
 }

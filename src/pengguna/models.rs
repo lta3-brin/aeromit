@@ -9,10 +9,11 @@
 //! ```rust
 //! use crate::pengguna::model::{...}
 //! ```
-use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
+use serde::{Serialize, Deserialize};
 
 
+/// Model pengguna
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Pengguna {
     #[serde(rename = "_id")]
@@ -31,10 +32,37 @@ pub struct Pengguna {
     /// adminkah pengguna
     pub isadmin: bool,
 
+    /// masih aktifkah pengguna
+    pub isactive: bool,
+
     /// kapan pengguna dibuat
     pub dibuat: DateTime<Utc>,
 
     /// kapan pengguna diubah
     #[serde(rename = "lastModified")]
     pub last_modified: Option<DateTime<Utc>>,
+}
+
+/// Model klaim untuk jwt
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Klaim {
+    /// Subject atau pengguna
+    sub: String,
+
+    /// Kapan klaim diterbitkan
+    iat: DateTime<Utc>,
+
+    /// Kapan klaim berakhir
+    exp: DateTime<Utc>,
+}
+
+impl Klaim {
+    /// Fungsi sebagai "_constructor_" untuk nilai awal _Klaim_.
+    pub fn new(subject: String, iat: DateTime<Utc>, exp: DateTime<Utc>) -> Self {
+        Self {
+            sub: subject,
+            iat,
+            exp
+        }
+    }
 }

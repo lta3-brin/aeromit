@@ -39,12 +39,12 @@ use crate::pengguna::{
 /// # Keluaran
 ///
 /// * `Result<(), AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
-/// `()` dan _Enum_ `AppErrors`.
+/// berapa banyak yang diubah `i64` dan _Enum_ `AppErrors`.
 pub async fn save(
     uid: web::Path<String>,
     payload: web::Form<UbahPenggunaDto>,
     db: web::Data<Database>
-) -> Result<(), AppErrors> {
+) -> Result<i64, AppErrors> {
     let id = ObjectId::with_string(uid.trim())?;
     let collection = db.collection("pengguna");
 
@@ -52,9 +52,9 @@ pub async fn save(
 
     let dok = <PenggunaHelpers as PenggunaHelpersTrait>::update_to_doc(payload)?;
 
-    collection
+    let result = collection
         .update_one(doc! {"_id": id}, dok, None)
         .await?;
 
-    Ok(())
+    Ok(result.modified_count)
 }
