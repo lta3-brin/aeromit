@@ -178,7 +178,7 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
     }
 }
 
-/// Fungsi untuk cek admin status
+/// Fungsi untuk cek status
 fn is_it_true(status: u8) -> bool {
     if status == 0 {
         false
