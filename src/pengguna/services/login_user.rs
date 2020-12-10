@@ -10,8 +10,11 @@
 //! use crate::pengguna::services::login_user::{...}
 //! ```
 use argon2;
+use std::env;
 use actix_web::web;
 use validator::Validate;
+use actix_session::Session;
+use chrono::{Utc, Duration};
 use jsonwebtoken::{encode, Header, EncodingKey};
 use mongodb::{
     Database,
@@ -24,8 +27,6 @@ use crate::pengguna::helpers::{
     PenggunaHelpersTrait
 };
 use crate::pengguna::models::Klaim;
-use chrono::{Utc, Duration};
-use std::env;
 
 
 /// # Fungsi verify
@@ -37,6 +38,7 @@ use std::env;
 /// # Masukan
 ///
 /// * `payload` - inputan pengguna berupa email dan password.
+/// * `session` - actix session.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -47,6 +49,7 @@ use std::env;
 /// `Option<String>` dan _Enum_ `AppErrors`.
 pub async fn verify(
     payload: web::Form<LoginPenggunaDto>,
+    session: Session,
     db: web::Data<Database>
 ) -> Result<Option<String>, AppErrors> {
     let collection = db.collection("pengguna");
@@ -69,10 +72,11 @@ pub async fn verify(
             )?;
 
             if valid {
-                let iat = Utc::now();
-                let exp = iat + Duration::days(7);
-                let klm = Klaim::new(peg.nama, iat, exp);
                 let secret = env::var("APP_SECRET")?;
+                let how_long = env::var("APP_EXPIRE")?;
+                let iat = Utc::now();
+                let exp = iat + Duration::days(how_long.parse::<i64>()?);
+                let klm = Klaim::new(peg.nama, iat, exp);
 
                 let token = encode(
                     &Header::default(),
@@ -80,7 +84,9 @@ pub async fn verify(
                     &EncodingKey::from_secret(secret.as_bytes())
                 )?;
 
-                Ok(Some(token))
+                session.set("masuk", token)?;
+
+                Ok(Some("Selamat datang di Aeromit".to_string()))
             } else { Ok(None) }
         }
         None => Ok(None)

@@ -15,6 +15,7 @@ jsonwebtoken = "7"
 env_logger = "0.8"
 rust-argon2 = "0.8"
 derive_more = "0.99"
+actix-session = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 chrono = { version = "0.4", features = ["serde"] }
 validator = { version = "0.12", features = ["derive"] }

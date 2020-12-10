@@ -18,6 +18,7 @@ use actix_web::{
     dev::HttpResponseBuilder,
     http::{header, StatusCode}
 };
+use std::num::ParseIntError;
 use crate::app::dto::UmpanBalik;
 
 
@@ -28,8 +29,10 @@ pub enum AppErrors {
     EnvError(env::VarError),
     MongoError(mongodb::error::Error),
     ActixError(io::Error),
+    ActixWebError(actix_web::Error),
     BsonAccessError(bson::document::ValueAccessError),
     BsonDeserializeError(bson::de::Error),
+    ParseIntegerError(ParseIntError),
     ParseOidError(bson::oid::Error),
     ParseChronoError(chrono::ParseError),
     InputValidationError(validator::ValidationErrors),
@@ -55,6 +58,13 @@ impl From<mongodb::error::Error> for AppErrors {
 impl From<io::Error> for AppErrors {
     fn from(err: io::Error) -> Self {
         Self::ActixError(err)
+    }
+}
+
+/// Implementasi `AppErrors` apabila terjadi kesalahan seputar `actix_web::Error`
+impl From<actix_web::Error> for AppErrors {
+    fn from(err: actix_web::Error) -> Self {
+        Self::ActixWebError(err)
     }
 }
 
@@ -104,6 +114,13 @@ impl From<argon2::Error> for AppErrors {
 impl From<jsonwebtoken::errors::Error> for AppErrors {
     fn from(err: jsonwebtoken::errors::Error) -> Self {
         Self::JwtError(err)
+    }
+}
+
+/// Implementasi `AppErrors` apabila terjadi kesalahan seputar `ParseIntError`
+impl From<ParseIntError> for AppErrors {
+    fn from(err: ParseIntError) -> Self {
+        Self::ParseIntegerError(err)
     }
 }
 
