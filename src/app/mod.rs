@@ -21,3 +21,4 @@ pub mod routes;
 pub mod errors;
 pub mod configs;
 pub mod helpers;
+pub mod middlewares;
