@@ -12,7 +12,6 @@
 use mongodb::Database;
 use actix_web::{
     web,
-    put,
     HttpResponse,
 };
 use crate::app::errors::AppErrors;
@@ -41,7 +40,6 @@ use crate::pengguna::{
 ///
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
-#[put("/pengguna/{id}/")]
 pub async fn save(
     id: web::Path<String>,
     payload: web::Form<UbahPenggunaDto>,

@@ -49,6 +49,9 @@ pub struct Klaim {
     /// Subject atau pengguna
     sub: String,
 
+    /// Email pengguna
+    email: String,
+
     /// Kapan klaim diterbitkan
     iat: DateTime<Utc>,
 
@@ -58,9 +61,15 @@ pub struct Klaim {
 
 impl Klaim {
     /// Fungsi sebagai "_constructor_" untuk nilai awal _Klaim_.
-    pub fn new(subject: String, iat: DateTime<Utc>, exp: DateTime<Utc>) -> Self {
+    pub fn new(
+        subject: String,
+        email: String,
+        iat: DateTime<Utc>,
+        exp: DateTime<Utc>
+    ) -> Self {
         Self {
             sub: subject,
+            email,
             iat,
             exp
         }
