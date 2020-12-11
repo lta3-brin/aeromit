@@ -12,7 +12,6 @@
 use mongodb::Database;
 use actix_web::{
     web,
-    get,
     HttpResponse,
 };
 use crate::app::dto::UmpanBalik;
@@ -41,7 +40,6 @@ use crate::pengguna::{
 ///
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
-#[get("/pengguna/")]
 pub async fn all(
     doc_props: web::Query<DocProps>,
     db: web::Data<Database>,

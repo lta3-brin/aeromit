@@ -12,7 +12,6 @@
 use mongodb::Database;
 use actix_web::{
     web,
-    get,
     HttpResponse,
 };
 use crate::app::errors::AppErrors;
@@ -41,7 +40,6 @@ use crate::pengguna::{
 ///
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
-#[get("/pengguna/{id}/")]
 pub async fn by_id(
     id: web::Path<String>,
     db: web::Data<Database>,

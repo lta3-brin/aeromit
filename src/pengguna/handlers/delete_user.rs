@@ -12,7 +12,6 @@
 use mongodb::Database;
 use actix_web::{
     web,
-    delete,
     HttpResponse,
 };
 use crate::app::{
@@ -40,7 +39,6 @@ use crate::pengguna::services::delete_user;
 ///
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
-#[delete("/pengguna/{id}/")]
 pub async fn by_id(
     id: web::Path<String>,
     db: web::Data<Database>,
