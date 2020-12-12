@@ -18,7 +18,6 @@ use crate::app::dto::UmpanBalik;
 use crate::app::errors::AppErrors;
 use crate::pengguna::{
     dto::DocProps,
-    models::Pengguna,
     services::get_users,
 };
 
@@ -45,10 +44,11 @@ pub async fn all(
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
     let seluruh_pengguna = get_users::all(doc_props, db).await?;
+    let res = UmpanBalik::new(
+        true,
+        "Pengguna berhasil ditampilkan",
+        seluruh_pengguna
+    );
 
-    Ok(HttpResponse::Ok().json(UmpanBalik::<Vec<Pengguna>> {
-        sukses: true,
-        pesan: "Pengguna berhasil ditampilkan".to_string(),
-        hasil: seluruh_pengguna,
-    }))
+    Ok(HttpResponse::Ok().json(res))
 }

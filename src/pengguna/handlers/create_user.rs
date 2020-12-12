@@ -46,9 +46,11 @@ pub async fn new(
 ) -> Result<HttpResponse, AppErrors> {
     create_user::new(payload, db).await?;
 
-    Ok(HttpResponse::Created().json(UmpanBalik::<()> {
-        sukses: true,
-        pesan: "Pengguna berhasil ditambahkan".to_string(),
-        hasil: (),
-    }))
+    let res = UmpanBalik::new(
+        true,
+        "Pengguna berhasil ditambahkan",
+        ()
+    );
+
+    Ok(HttpResponse::Created().json(res))
 }

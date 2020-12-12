@@ -52,16 +52,20 @@ pub async fn masuk(
     let valid = login_user::verify(payload, session, db).await?;
 
     if valid.is_none() {
-        Ok(HttpResponse::NotFound().json(UmpanBalik::<Option<String>> {
-            sukses: false,
-            pesan: "Email/Password tidak ditemukan".to_string(),
-            hasil: valid,
-        }))
+        let res = UmpanBalik::new(
+            false,
+            "Email/Password tidak ditemukan",
+            valid
+        );
+
+        Ok(HttpResponse::NotFound().json(res))
     } else {
-        Ok(HttpResponse::Accepted().json(UmpanBalik::<Option<String>> {
-            sukses: true,
-            pesan: "Pengguna tervalidasi".to_string(),
-            hasil: valid,
-        }))
+        let res = UmpanBalik::new(
+            true,
+            "Pengguna tervalidasi",
+            valid
+        );
+
+        Ok(HttpResponse::Accepted().json(res))
     }
 }

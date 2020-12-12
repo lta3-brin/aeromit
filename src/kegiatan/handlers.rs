@@ -23,7 +23,6 @@ use actix_web::{
 };
 use crate::app::dto::UmpanBalik;
 use crate::app::errors::AppErrors;
-use crate::kegiatan::models::Kegiatan;
 use crate::kegiatan::dto::{
     DocProps,
     KegiatanDto,
@@ -62,11 +61,13 @@ pub async fn tambah_kegiatan_handler(
 ) -> Result<HttpResponse, AppErrors> {
     tambah_kegiatan_service(payload, db).await?;
 
-    Ok(HttpResponse::Created().json(UmpanBalik::<()> {
-        sukses: true,
-        pesan: "Kegiatan berhasil ditambahkan".to_string(),
-        hasil: (),
-    }))
+    let res = UmpanBalik::new(
+        true,
+        "Kegiatan berhasil ditambahkan",
+        ()
+    );
+
+    Ok(HttpResponse::Created().json(res))
 }
 
 /// # Fungsi baca_kegiatan_handler
@@ -94,11 +95,13 @@ pub async fn baca_kegiatan_handler(
 ) -> Result<HttpResponse, AppErrors> {
     let koleksi_kegiatan = baca_kegiatan_service(doc_props, db).await?;
 
-    Ok(HttpResponse::Ok().json(UmpanBalik::<Vec<Kegiatan>> {
-        sukses: true,
-        pesan: "Kegiatan berhasil ditampilkan".to_string(),
-        hasil: koleksi_kegiatan,
-    }))
+    let res = UmpanBalik::new(
+        true,
+        "Kegiatan berhasil ditampilkan",
+        koleksi_kegiatan
+    );
+
+    Ok(HttpResponse::Ok().json(res))
 }
 
 /// # Fungsi baca_kegiatan_tertentu_handler
@@ -126,11 +129,13 @@ pub async fn baca_kegiatan_tertentu_handler(
 ) -> Result<HttpResponse, AppErrors> {
     let kegiatan = baca_kegiatan_tertentu_service(id, db).await?;
 
-    Ok(HttpResponse::Ok().json(UmpanBalik::<Option<Kegiatan>> {
-        sukses: true,
-        pesan: "Kegiatan berhasil ditampilkan".to_string(),
-        hasil: kegiatan,
-    }))
+    let res = UmpanBalik::new(
+        true,
+        "Kegiatan berhasil ditampilkan",
+        kegiatan
+    );
+
+    Ok(HttpResponse::Ok().json(res))
 }
 
 /// # Fungsi ubah_kegiatan_tertentu_handler
@@ -160,11 +165,13 @@ pub async fn ubah_kegiatan_tertentu_handler(
 ) -> Result<HttpResponse, AppErrors> {
     ubah_kegiatan_tertentu_service(id, payload, db).await?;
 
-    Ok(HttpResponse::Ok().json(UmpanBalik::<()> {
-        sukses: true,
-        pesan: "Kegiatan berhasil diubah".to_string(),
-        hasil: (),
-    }))
+    let res = UmpanBalik::new(
+        true,
+        "Kegiatan berhasil diubah",
+        ()
+    );
+
+    Ok(HttpResponse::Ok().json(res))
 }
 
 /// # Fungsi hapus_kegiatan_tertentu_handler
@@ -192,9 +199,11 @@ pub async fn hapus_kegiatan_tertentu_handler(
 ) -> Result<HttpResponse, AppErrors> {
     hapus_kegiatan_tertentu_service(id, db).await?;
 
-    Ok(HttpResponse::Ok().json(UmpanBalik::<()> {
-        sukses: true,
-        pesan: "Kegiatan berhasil dihapus".to_string(),
-        hasil: (),
-    }))
+    let res = UmpanBalik::new(
+        true,
+        "Kegiatan berhasil dihapus",
+        ()
+    );
+
+    Ok(HttpResponse::Ok().json(res))
 }

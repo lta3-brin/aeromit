@@ -16,10 +16,7 @@ use actix_web::{
 };
 use crate::app::errors::AppErrors;
 use crate::app::dto::UmpanBalik;
-use crate::pengguna::{
-    models::Pengguna,
-    services::get_user,
-};
+use crate::pengguna::services::get_user;
 
 
 /// # Fungsi by_id
@@ -47,16 +44,20 @@ pub async fn by_id(
     let pengguna_tertentu = get_user::by_id(id, db).await?;
 
     if pengguna_tertentu.is_none() {
-        Ok(HttpResponse::NotFound().json(UmpanBalik::<Option<Pengguna>> {
-            sukses: false,
-            pesan: "Pengguna tidak ditemukan".to_string(),
-            hasil: pengguna_tertentu,
-        }))
+        let res = UmpanBalik::new(
+            false,
+            "Pengguna tidak ditemukan",
+            pengguna_tertentu
+        );
+
+        Ok(HttpResponse::NotFound().json(res))
     } else {
-        Ok(HttpResponse::Ok().json(UmpanBalik::<Option<Pengguna>> {
-            sukses: true,
-            pesan: "Pengguna berhasil ditampilkan".to_string(),
-            hasil: pengguna_tertentu,
-        }))
+        let res = UmpanBalik::new(
+            true,
+            "Pengguna berhasil ditampilkan",
+            pengguna_tertentu
+        );
+
+        Ok(HttpResponse::Ok().json(res))
     }
 }

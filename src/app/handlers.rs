@@ -33,11 +33,13 @@ use crate::app::dto::UmpanBalik;
 /// * `impl Responder` - keluaran dari fungsi ini _impl Responder_.
 #[get("/")]
 pub async fn root_handler() -> impl Responder {
-    HttpResponse::Ok().json(UmpanBalik::<String> {
-        sukses: true,
-        pesan: "route utama aeromit".to_string(),
-        hasil: "Selamat datang di aplikasi Aeromit".to_string()
-    })
+    let res = UmpanBalik::new(
+        true,
+        "route utama aeromit",
+        "Selamat datang di aplikasi Aeromit"
+    );
+
+    HttpResponse::Ok().json(res)
 }
 
 /// # Fungsi app_handler
@@ -58,9 +60,11 @@ pub async fn root_handler() -> impl Responder {
 /// * `impl Responder` - keluaran dari fungsi ini _impl Responder_.
 #[get("/")]
 pub async fn app_handler() -> impl Responder {
-    HttpResponse::Ok().json(UmpanBalik::<String> {
-        sukses: true,
-        pesan: "route untuk v1".to_string(),
-        hasil: "/v1".to_string()
-    })
+    let res = UmpanBalik::new(
+        true,
+        "route untuk v1",
+        "/v1"
+    );
+
+    HttpResponse::Ok().json(res)
 }
