@@ -137,12 +137,14 @@ impl ResponseError for AppErrors {
     }
 
     fn error_response(&self) -> HttpResponse {
+        let res = UmpanBalik::new(
+            false,
+            "Terjadi kesalahan yang perlu diperhatikan",
+            self.to_string()
+        );
+
         HttpResponseBuilder::new(self.status_code())
             .set_header(header::CONTENT_TYPE, "application/json")
-            .json(UmpanBalik::<String> {
-                sukses: false,
-                pesan: "Terjadi kesalahan yang perlu diperhatikan".to_string(),
-                hasil: self.to_string()
-            })
+            .json(res)
     }
 }
