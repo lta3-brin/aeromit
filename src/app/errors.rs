@@ -131,7 +131,7 @@ impl ResponseError for AppErrors {
             AppErrors::ParseOidError(..) => StatusCode::BAD_REQUEST,
             AppErrors::ParseChronoError(..) => StatusCode::BAD_REQUEST,
             AppErrors::InputValidationError(..) => StatusCode::BAD_REQUEST,
-            AppErrors::ActixWebError(..) => StatusCode::FORBIDDEN,
+            AppErrors::ActixWebError(..) => StatusCode::BAD_REQUEST,
             AppErrors::JwtError(..) => StatusCode::NOT_ACCEPTABLE,
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         }
