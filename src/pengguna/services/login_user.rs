@@ -76,7 +76,12 @@ pub async fn verify(
                 let how_long = env::var("APP_EXPIRE")?;
                 let iat = Utc::now();
                 let exp = iat + Duration::days(how_long.parse::<i64>()?);
-                let klm = Klaim::new(peg.nama, peg.email, iat, exp);
+                let klm = Klaim::new(
+                    peg.nama,
+                    peg.email,
+                    iat.timestamp_nanos(),
+                    exp.timestamp_nanos()
+                );
 
                 let token = encode(
                     &Header::default(),
