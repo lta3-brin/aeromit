@@ -10,6 +10,7 @@
 //! use crate::pengguna::handlers::get_users::{...}
 //! ```
 use mongodb::Database;
+use actix_session::Session;
 use actix_web::{
     web,
     HttpResponse,
@@ -20,6 +21,7 @@ use crate::pengguna::{
     dto::DocProps,
     services::get_users,
 };
+use crate::app::permissions::UserPermissions;
 
 /// # Fungsi all
 ///
@@ -31,6 +33,7 @@ use crate::pengguna::{
 /// # Masukan
 ///
 /// * `doc_props` - properti dokumen untuk kelola limit dan skip..
+/// * `session` - Actix session
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -41,8 +44,11 @@ use crate::pengguna::{
 /// `HttpResponse` dan _Enum_ `AppErrors`.
 pub async fn all(
     doc_props: web::Query<DocProps>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
+    UserPermissions::is_admin(session, db.clone()).await?;
+
     let seluruh_pengguna = get_users::all(doc_props, db).await?;
     let res = UmpanBalik::new(
         true,
