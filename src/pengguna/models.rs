@@ -53,10 +53,10 @@ pub struct Klaim {
     email: String,
 
     /// Kapan klaim diterbitkan
-    iat: DateTime<Utc>,
+    iat: i64,
 
     /// Kapan klaim berakhir
-    exp: DateTime<Utc>,
+    exp: i64,
 }
 
 impl Klaim {
@@ -64,8 +64,8 @@ impl Klaim {
     pub fn new(
         subject: String,
         email: String,
-        iat: DateTime<Utc>,
-        exp: DateTime<Utc>
+        iat: i64,
+        exp: i64
     ) -> Self {
         Self {
             sub: subject,
