@@ -12,8 +12,8 @@
 //! mod pengguna
 //! ```
 mod dto;
-mod models;
 mod services;
 mod handlers;
 mod helpers;
+pub mod models;
 pub mod routes;
