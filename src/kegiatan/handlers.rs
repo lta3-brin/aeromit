@@ -12,6 +12,7 @@
 //! ```rust
 //! use crate::kegiatan::handlers::{...}
 //! ```
+use actix_session::Session;
 use mongodb::{
     bson::doc,
     Database,
@@ -21,8 +22,11 @@ use actix_web::{
     put, delete,
     web, HttpResponse,
 };
-use crate::app::dto::UmpanBalik;
-use crate::app::errors::AppErrors;
+use crate::app::{
+    dto::UmpanBalik,
+    errors::AppErrors,
+    permissions::UserPermissions
+};
 use crate::kegiatan::dto::{
     DocProps,
     KegiatanDto,
@@ -91,8 +95,11 @@ pub async fn tambah_kegiatan_handler(
 #[get("/kegiatan/")]
 pub async fn baca_kegiatan_handler(
     doc_props: web::Query<DocProps>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
+    UserPermissions::is_authenticated(session)?;
+
     let koleksi_kegiatan = baca_kegiatan_service(doc_props, db).await?;
 
     let res = UmpanBalik::new(
@@ -125,8 +132,11 @@ pub async fn baca_kegiatan_handler(
 #[get("/kegiatan/{id}/")]
 pub async fn baca_kegiatan_tertentu_handler(
     id: web::Path<String>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
+    UserPermissions::is_authenticated(session)?;
+
     let kegiatan = baca_kegiatan_tertentu_service(id, db).await?;
 
     let res = UmpanBalik::new(
