@@ -22,3 +22,4 @@ pub mod errors;
 pub mod configs;
 pub mod helpers;
 pub mod middlewares;
+pub mod permissions;

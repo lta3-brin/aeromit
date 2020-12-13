@@ -10,6 +10,7 @@
 //! use crate::pengguna::handlers::get_user::{...}
 //! ```
 use mongodb::Database;
+use actix_session::Session;
 use actix_web::{
     web,
     HttpResponse,
@@ -17,6 +18,7 @@ use actix_web::{
 use crate::app::errors::AppErrors;
 use crate::app::dto::UmpanBalik;
 use crate::pengguna::services::get_user;
+use crate::app::permissions::UserPermissions;
 
 
 /// # Fungsi by_id
@@ -29,6 +31,7 @@ use crate::pengguna::services::get_user;
 /// # Masukan
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
+/// * `session` - Actix session
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -39,8 +42,10 @@ use crate::pengguna::services::get_user;
 /// `HttpResponse` dan _Enum_ `AppErrors`.
 pub async fn by_id(
     id: web::Path<String>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
+    UserPermissions::is_admin(session, db.clone()).await?;
     let pengguna_tertentu = get_user::by_id(id, db).await?;
 
     if pengguna_tertentu.is_none() {
