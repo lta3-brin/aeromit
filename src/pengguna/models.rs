@@ -60,7 +60,24 @@ pub struct Klaim {
 }
 
 impl Klaim {
+    /// # Fungsi new
+    ///
     /// Fungsi sebagai "_constructor_" untuk nilai awal _Klaim_.
+    ///
+    /// <br />
+    ///
+    /// # Masukan
+    ///
+    /// * `subject` - Subjek/nama pengguna.
+    /// * `email` - email pengguna.
+    /// * `iat` - kapan dibuat.
+    /// * `exp` - kapan berakhir.
+    ///
+    /// <br />
+    ///
+    /// # Keluaran
+    ///
+    /// * `Klaim` - keluaran berupa _Struct_ klaim
     pub fn new(
         subject: String,
         email: String,
@@ -73,5 +90,24 @@ impl Klaim {
             iat,
             exp
         }
+    }
+
+    /// # Fungsi get_email
+    ///
+    /// Fungsi untuk mengambil field email
+    ///
+    /// <br />
+    ///
+    /// # Masukan
+    ///
+    /// * `self` - dapat diakses setelah bagian dari _Struct_ Klaim.
+    ///
+    /// <br />
+    ///
+    /// # Keluaran
+    ///
+    /// * `String` - keluaran berupa String
+    pub fn get_email(self) -> String {
+        self.email
     }
 }
