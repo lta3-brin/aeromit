@@ -50,6 +50,7 @@ use crate::kegiatan::services::{
 /// # Masukan
 ///
 /// * `payload` - Data masukan dari pengguna untuk tambah kegiatan.
+/// * `session` - actix session.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -61,8 +62,11 @@ use crate::kegiatan::services::{
 #[post("/kegiatan/")]
 pub async fn tambah_kegiatan_handler(
     payload: web::Form<KegiatanDto>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
+    UserPermissions::is_admin(session, db.clone()).await?;
+
     tambah_kegiatan_service(payload, db).await?;
 
     let res = UmpanBalik::new(
@@ -84,6 +88,7 @@ pub async fn tambah_kegiatan_handler(
 /// # Masukan
 ///
 /// * `doc_props` - properti dokumen untuk kelola limit dan skip.
+/// * `session` - actix session.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -121,6 +126,7 @@ pub async fn baca_kegiatan_handler(
 /// # Masukan
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
+/// * `session` - actix session.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -159,6 +165,7 @@ pub async fn baca_kegiatan_tertentu_handler(
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
 /// * `payload` - Data masukan dari pengguna untuk ubah kegiatan.
+/// * `session` - actix session.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -171,8 +178,11 @@ pub async fn baca_kegiatan_tertentu_handler(
 pub async fn ubah_kegiatan_tertentu_handler(
     id: web::Path<String>,
     payload: web::Form<KegiatanDto>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
+    UserPermissions::is_admin(session, db.clone()).await?;
+
     ubah_kegiatan_tertentu_service(id, payload, db).await?;
 
     let res = UmpanBalik::new(
@@ -194,6 +204,7 @@ pub async fn ubah_kegiatan_tertentu_handler(
 /// # Masukan
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
+/// * `session` - actix session.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -205,8 +216,11 @@ pub async fn ubah_kegiatan_tertentu_handler(
 #[delete("/kegiatan/{id}/")]
 pub async fn hapus_kegiatan_tertentu_handler(
     id: web::Path<String>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
+    UserPermissions::is_admin(session, db.clone()).await?;
+
     hapus_kegiatan_tertentu_service(id, db).await?;
 
     let res = UmpanBalik::new(
