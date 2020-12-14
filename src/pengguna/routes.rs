@@ -54,10 +54,18 @@ use crate::pengguna::handlers::{
 ///
 pub fn pengguna_route(route: &mut web::ServiceConfig) {
     route
-        .service(create_user::new)
-        .service(get_users::all)
-        .service(get_user::by_id)
-        .service(update_user::save)
-        .service(delete_user::by_id)
-        .service(login_user::masuk);
+        .service(
+            web::resource("/pengguna/")
+                .name("create_get")
+                .route(web::post().to(create_user::new))
+                .route(web::get().to(get_users::all))
+        )
+        .service(login_user::masuk)
+        .service(
+            web::resource("/pengguna/{id}/")
+                .name("more_on_user")
+                .route(web::get().to(get_user::by_id))
+                .route(web::put().to(update_user::save))
+                .route(web::delete().to(delete_user::by_id))
+        );
 }

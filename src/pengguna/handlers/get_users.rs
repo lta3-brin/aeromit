@@ -10,18 +10,18 @@
 //! use crate::pengguna::handlers::get_users::{...}
 //! ```
 use mongodb::Database;
+use actix_session::Session;
 use actix_web::{
     web,
-    get,
     HttpResponse,
 };
 use crate::app::dto::UmpanBalik;
 use crate::app::errors::AppErrors;
 use crate::pengguna::{
     dto::DocProps,
-    models::Pengguna,
     services::get_users,
 };
+use crate::app::permissions::UserPermissions;
 
 /// # Fungsi all
 ///
@@ -33,6 +33,7 @@ use crate::pengguna::{
 /// # Masukan
 ///
 /// * `doc_props` - properti dokumen untuk kelola limit dan skip..
+/// * `session` - Actix session
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -41,16 +42,19 @@ use crate::pengguna::{
 ///
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
-#[get("/pengguna/")]
 pub async fn all(
     doc_props: web::Query<DocProps>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    let seluruh_pengguna = get_users::all(doc_props, db).await?;
+    UserPermissions::is_admin(session, db.clone()).await?;
 
-    Ok(HttpResponse::Ok().json(UmpanBalik::<Vec<Pengguna>> {
-        sukses: true,
-        pesan: "Pengguna berhasil ditampilkan".to_string(),
-        hasil: seluruh_pengguna,
-    }))
+    let seluruh_pengguna = get_users::all(doc_props, db).await?;
+    let res = UmpanBalik::new(
+        true,
+        "Pengguna berhasil ditampilkan",
+        seluruh_pengguna
+    );
+
+    Ok(HttpResponse::Ok().json(res))
 }

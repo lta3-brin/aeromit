@@ -10,9 +10,9 @@
 //! use crate::pengguna::handlers::delete_user::{...}
 //! ```
 use mongodb::Database;
+use actix_session::Session;
 use actix_web::{
     web,
-    delete,
     HttpResponse,
 };
 use crate::app::{
@@ -20,6 +20,7 @@ use crate::app::{
     errors::AppErrors,
 };
 use crate::pengguna::services::delete_user;
+use crate::app::permissions::UserPermissions;
 
 
 /// # Fungsi by_id
@@ -32,6 +33,7 @@ use crate::pengguna::services::delete_user;
 /// # Masukan
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
+/// * `session` - Actix session
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -40,24 +42,30 @@ use crate::pengguna::services::delete_user;
 ///
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
-#[delete("/pengguna/{id}/")]
 pub async fn by_id(
     id: web::Path<String>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
+    UserPermissions::is_admin(session, db.clone()).await?;
+
     let count = delete_user::by_id(id, db).await?;
 
     if count == 0 {
-        Ok(HttpResponse::NotFound().json(UmpanBalik::<i64> {
-            sukses: false,
-            pesan: "Pengguna tidak ditemukan".to_string(),
-            hasil: count,
-        }))
+        let res = UmpanBalik::new(
+            false,
+            "Pengguna tidak ditemukan",
+            count
+        );
+
+        Ok(HttpResponse::NotFound().json(res))
     } else {
-        Ok(HttpResponse::Ok().json(UmpanBalik::<i64> {
-            sukses: true,
-            pesan: "Pengguna berhasil dihapus".to_string(),
-            hasil: count,
-        }))
+        let res = UmpanBalik::new(
+            true,
+            "Pengguna berhasil dihapus",
+            count
+        );
+
+        Ok(HttpResponse::Ok().json(res))
     }
 }

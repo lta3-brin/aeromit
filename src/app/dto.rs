@@ -18,9 +18,15 @@ use serde::{Serialize};
 #[derive(Debug, Serialize)]
 pub struct UmpanBalik<T> {
     /// Umpan balik perlu status apakah sukses atau tidak.
-    pub sukses: bool,
+    sukses: bool,
     /// Umpan balik perlu informasi dalam bentuk pesan
-    pub pesan: String,
+    pesan: &'static str,
     /// Umpan balik perlu keluaran dalam bentuk hasil.
-    pub hasil: T,
+    hasil: T,
+}
+
+impl<T> UmpanBalik<T> {
+    pub fn new(sukses: bool, pesan: &'static str, hasil: T) -> Self {
+        Self { sukses, pesan, hasil }
+    }
 }

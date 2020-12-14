@@ -10,9 +10,9 @@
 //! use crate::pengguna::handlers::update_user::{...}
 //! ```
 use mongodb::Database;
+use actix_session::Session;
 use actix_web::{
     web,
-    put,
     HttpResponse,
 };
 use crate::app::errors::AppErrors;
@@ -21,6 +21,7 @@ use crate::pengguna::{
     services::update_user,
     dto::UbahPenggunaDto,
 };
+use crate::app::permissions::UserPermissions;
 
 
 /// # Fungsi save
@@ -33,6 +34,8 @@ use crate::pengguna::{
 /// # Masukan
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
+/// * `payload` - inputan dari pengguna dalam bentuk `Form`.
+/// * `session` - Actix session
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -41,25 +44,31 @@ use crate::pengguna::{
 ///
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
-#[put("/pengguna/{id}/")]
 pub async fn save(
     id: web::Path<String>,
     payload: web::Form<UbahPenggunaDto>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
+    UserPermissions::is_admin(session, db.clone()).await?;
+
     let count = update_user::save(id, payload, db).await?;
 
     if count == 0 {
-        Ok(HttpResponse::NotFound().json(UmpanBalik::<i64> {
-            sukses: false,
-            pesan: "Pengguna tidak ditemukan".to_string(),
-            hasil: count,
-        }))
+        let res = UmpanBalik::new(
+            false,
+            "Pengguna tidak ditemukan",
+            count
+        );
+
+        Ok(HttpResponse::NotFound().json(res))
     } else {
-        Ok(HttpResponse::Ok().json(UmpanBalik::<i64> {
-            sukses: true,
-            pesan: "Pengguna berhasil disimpan".to_string(),
-            hasil: count,
-        }))
+        let res = UmpanBalik::new(
+            true,
+            "Pengguna berhasil disimpan",
+            count
+        );
+
+        Ok(HttpResponse::Ok().json(res))
     }
 }

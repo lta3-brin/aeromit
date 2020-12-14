@@ -10,17 +10,15 @@
 //! use crate::pengguna::handlers::get_user::{...}
 //! ```
 use mongodb::Database;
+use actix_session::Session;
 use actix_web::{
     web,
-    get,
     HttpResponse,
 };
 use crate::app::errors::AppErrors;
 use crate::app::dto::UmpanBalik;
-use crate::pengguna::{
-    models::Pengguna,
-    services::get_user,
-};
+use crate::pengguna::services::get_user;
+use crate::app::permissions::UserPermissions;
 
 
 /// # Fungsi by_id
@@ -33,6 +31,7 @@ use crate::pengguna::{
 /// # Masukan
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
+/// * `session` - Actix session
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -41,24 +40,29 @@ use crate::pengguna::{
 ///
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
-#[get("/pengguna/{id}/")]
 pub async fn by_id(
     id: web::Path<String>,
+    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
+    UserPermissions::is_admin(session, db.clone()).await?;
     let pengguna_tertentu = get_user::by_id(id, db).await?;
 
     if pengguna_tertentu.is_none() {
-        Ok(HttpResponse::NotFound().json(UmpanBalik::<Option<Pengguna>> {
-            sukses: false,
-            pesan: "Pengguna tidak ditemukan".to_string(),
-            hasil: pengguna_tertentu,
-        }))
+        let res = UmpanBalik::new(
+            false,
+            "Pengguna tidak ditemukan",
+            pengguna_tertentu
+        );
+
+        Ok(HttpResponse::NotFound().json(res))
     } else {
-        Ok(HttpResponse::Ok().json(UmpanBalik::<Option<Pengguna>> {
-            sukses: true,
-            pesan: "Pengguna berhasil ditampilkan".to_string(),
-            hasil: pengguna_tertentu,
-        }))
+        let res = UmpanBalik::new(
+            true,
+            "Pengguna berhasil ditampilkan",
+            pengguna_tertentu
+        );
+
+        Ok(HttpResponse::Ok().json(res))
     }
 }
