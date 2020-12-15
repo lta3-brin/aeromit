@@ -59,11 +59,16 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
             dok.get("lastModified")
         );
 
+        let tautan_video = <AppHelpers as AppHelpersTrait>::optional_string(
+            dok.get("tautanVideo")
+        );
+
         Ok(Kegiatan {
             id: id.to_hex(),
             nama: nama.to_string(),
             kapan: *kapan,
             ruang: ruang.to_string(),
+            tautan_video,
             last_modified: diubah
         })
     }
@@ -90,25 +95,32 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
         update: bool
     ) -> Result<Document, AppErrors> {
         let dok: Document;
+        let tautan_video: String;
         let parse_dt = DateTime::parse_from_rfc3339(
             payload.0.kapan.as_str()
         )?;
 
         let bson_dt: Bson = Bson::DateTime(parse_dt.with_timezone(&Utc));
 
+        if let Some(tautan) = payload.0.tautan_video {
+            tautan_video = tautan;
+        } else { tautan_video = "".to_string() }
+
         if update {
             dok = doc! {
                 "$set": {
                     "nama": payload.0.nama,
                     "kapan": bson_dt,
-                    "ruang": payload.0.ruang
+                    "ruang": payload.0.ruang,
+                    "tautanVideo": tautan_video
                 }
             };
         } else {
             dok = doc! {
                 "nama": payload.0.nama,
                 "kapan": bson_dt,
-                "ruang": payload.0.ruang
+                "ruang": payload.0.ruang,
+                "tautanVideo": tautan_video
             };
         }
 
