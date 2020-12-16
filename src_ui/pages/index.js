@@ -1,17 +1,17 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import DefaultLayout from "../layouts/default";
 
 export default function Home() {
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Aeromit BBTA3</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <DefaultLayout>
         <h1>Permulaan Aeromit UI</h1>
-      </main>
+      </DefaultLayout>
     </div>
   )
 }
