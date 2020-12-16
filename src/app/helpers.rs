@@ -15,6 +15,7 @@ use mongodb::bson::Bson;
 /// Trait digunakan untuk menerapkan fungsi yang diperlukan oleh masing-masing `Services`.
 pub trait AppHelpersTrait {
     fn last_modified(docu: Option<&Bson>) -> Option<DateTime<Utc>>;
+    fn optional_string(docu: Option<&Bson>) -> Option<String>;
 }
 
 /// Struct untuk memberikan fungsi-fungsi bantuan melalui implementasi
@@ -35,7 +36,7 @@ impl AppHelpersTrait for AppHelpers {
     ///
     /// # Keluaran
     ///
-    /// * `Option<DateTime<Utc>>` - keluaran berupa _enum_ `Result` yang terdiri dari
+    /// * `Option<DateTime<Utc>>` - keluaran berupa _enum_ `Option` yang terdiri dari
     /// `DateTime<Utc>`.
     fn last_modified(docu: Option<&Bson>) -> Option<DateTime<Utc>> {
         let diubah: Option<DateTime<Utc>>;
@@ -47,5 +48,33 @@ impl AppHelpersTrait for AppHelpers {
         } else { diubah = None }
 
         diubah
+    }
+
+    /// # Fungsi optional_string
+    ///
+    /// Fungsi ini untuk mendapatkan optional text saat dokumen berhasil diubah.
+    ///
+    /// <br />
+    ///
+    /// # Masukan
+    ///
+    /// * `docu` - masukan dengan _type_ `Document`.
+    ///
+    /// <br />
+    ///
+    /// # Keluaran
+    ///
+    /// * `Option<String>` - keluaran berupa _enum_ `Option` yang terdiri dari
+    /// `String`.
+    fn optional_string(docu: Option<&Bson>) -> Option<String> {
+        let text: Option<String>;
+
+        if let Some(data) = docu {
+            if let Some(kapan) = data.as_str() {
+                text = Some(kapan.to_string())
+            } else { text = None }
+        } else { text = None }
+
+        text
     }
 }

@@ -27,6 +27,10 @@ pub struct Kegiatan {
     /// dimana kegiatan diadakan
     pub ruang: String,
 
+    /// adakah tautan video kegiatan
+    #[serde(rename = "tautanVideo")]
+    pub tautan_video: Option<String>,
+
     /// kapan kegiatan diubah
     #[serde(rename = "lastModified")]
     pub last_modified: Option<DateTime<Utc>>,

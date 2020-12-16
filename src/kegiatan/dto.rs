@@ -38,4 +38,7 @@ pub struct KegiatanDto {
     /// dimana kegiatan diadakan
     #[validate(length(min = 3))]
     pub ruang: String,
+
+    /// tautan video apabila tersedia
+    pub tautan_video: Option<String>
 }
