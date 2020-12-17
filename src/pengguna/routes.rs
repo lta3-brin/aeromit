@@ -13,12 +13,7 @@
 //! ```
 use actix_web::web;
 use crate::pengguna::handlers::{
-    create_user,
-    get_users,
-    get_user,
-    update_user,
-    delete_user,
-    login_user,
+    create_user, get_users, get_user, update_user, delete_user, login_user, logout_user
 };
 
 /// # Fungsi pengguna_route
@@ -61,6 +56,7 @@ pub fn pengguna_route(route: &mut web::ServiceConfig) {
                 .route(web::get().to(get_users::all))
         )
         .service(login_user::masuk)
+        .service(logout_user::keluar)
         .service(
             web::resource("/pengguna/{id}/")
                 .name("more_on_user")
