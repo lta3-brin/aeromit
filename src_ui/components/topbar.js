@@ -1,8 +1,9 @@
-import React from 'react'
-import color from '../styles/color'
-import {makeStyles} from '@material-ui/core/styles'
-import {ExitToApp, Info, Home} from '@material-ui/icons'
-import {AppBar, IconButton, Toolbar, Tooltip, Typography, Zoom} from '@material-ui/core'
+import React from "react"
+import color from "../styles/color"
+import {makeStyles} from "@material-ui/core/styles"
+import {ExitToApp, Home} from "@material-ui/icons"
+import {AppBar, IconButton, Toolbar, Tooltip, Typography, Zoom} from "@material-ui/core"
+import InfoComponent from "./modals/info"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +29,7 @@ export default function Topbar() {
     <div className={classes.root}>
       <AppBar position="static" className={classes.colorDefault}>
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h5" className={classes.title}>
             AEROMIT
           </Typography>
 
@@ -40,13 +41,7 @@ export default function Topbar() {
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Informasi" TransitionComponent={Zoom} arrow>
-            <IconButton
-              edge="start" color="inherit"
-              aria-label="info" className={classes.menuButton}>
-              <Info />
-            </IconButton>
-          </Tooltip>
+          <InfoComponent />
 
           <Tooltip title="Keluar" TransitionComponent={Zoom} arrow>
             <IconButton
