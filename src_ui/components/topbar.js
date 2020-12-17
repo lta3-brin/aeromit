@@ -1,8 +1,9 @@
-import React from 'react'
-import color from '../styles/color'
-import {ExitToApp, Info} from '@material-ui/icons'
-import {makeStyles} from '@material-ui/core/styles'
-import {AppBar, Box, IconButton, Toolbar, Typography} from '@material-ui/core'
+import React from "react"
+import color from "../styles/color"
+import {makeStyles} from "@material-ui/core/styles"
+import {ExitToApp, Home} from "@material-ui/icons"
+import {AppBar, IconButton, Toolbar, Tooltip, Typography, Zoom} from "@material-ui/core"
+import InfoComponent from "./modals/info"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: color.palette.bgnav.default
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(1),
   },
   title: {
     flexGrow: 1,
@@ -28,21 +29,27 @@ export default function Topbar() {
     <div className={classes.root}>
       <AppBar position="static" className={classes.colorDefault}>
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h5" className={classes.title}>
             AEROMIT
           </Typography>
 
-          <Box ml={1}>
-            <IconButton edge="start" color="inherit" aria-label="info">
-              <Info />
+          <Tooltip title="Utama" TransitionComponent={Zoom} arrow>
+            <IconButton
+              edge="start" color="inherit"
+              aria-label="home" className={classes.menuButton}>
+              <Home />
             </IconButton>
-          </Box>
+          </Tooltip>
 
-          <Box ml={1}>
-            <IconButton edge="start" color="inherit" aria-label="info">
+          <InfoComponent />
+
+          <Tooltip title="Keluar" TransitionComponent={Zoom} arrow>
+            <IconButton
+              edge="start" color="inherit"
+              aria-label="exit" className={classes.menuButton}>
               <ExitToApp />
             </IconButton>
-          </Box>
+          </Tooltip>
         </Toolbar>
       </AppBar>
     </div>

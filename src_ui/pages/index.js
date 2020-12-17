@@ -1,5 +1,7 @@
-import Head from 'next/head'
-import DefaultLayout from "../layouts/default";
+import React from "react"
+import Head from "next/head"
+import DefaultLayout from "../layouts/default"
+
 
 export default function Home() {
   return (
