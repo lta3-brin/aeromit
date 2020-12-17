@@ -1,8 +1,8 @@
 import React from 'react'
 import color from '../styles/color'
-import {ExitToApp, Info} from '@material-ui/icons'
 import {makeStyles} from '@material-ui/core/styles'
-import {AppBar, Box, IconButton, Toolbar, Typography} from '@material-ui/core'
+import {ExitToApp, Info, Home} from '@material-ui/icons'
+import {AppBar, IconButton, Toolbar, Tooltip, Typography, Zoom} from '@material-ui/core'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: color.palette.bgnav.default
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(1),
   },
   title: {
     flexGrow: 1,
@@ -32,17 +32,29 @@ export default function Topbar() {
             AEROMIT
           </Typography>
 
-          <Box ml={1}>
-            <IconButton edge="start" color="inherit" aria-label="info">
+          <Tooltip title="Utama" TransitionComponent={Zoom} arrow>
+            <IconButton
+              edge="start" color="inherit"
+              aria-label="home" className={classes.menuButton}>
+              <Home />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Informasi" TransitionComponent={Zoom} arrow>
+            <IconButton
+              edge="start" color="inherit"
+              aria-label="info" className={classes.menuButton}>
               <Info />
             </IconButton>
-          </Box>
+          </Tooltip>
 
-          <Box ml={1}>
-            <IconButton edge="start" color="inherit" aria-label="info">
+          <Tooltip title="Keluar" TransitionComponent={Zoom} arrow>
+            <IconButton
+              edge="start" color="inherit"
+              aria-label="exit" className={classes.menuButton}>
               <ExitToApp />
             </IconButton>
-          </Box>
+          </Tooltip>
         </Toolbar>
       </AppBar>
     </div>
