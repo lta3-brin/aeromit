@@ -17,3 +17,4 @@ pub mod get_user;
 pub mod update_user;
 pub mod delete_user;
 pub mod login_user;
+pub mod logout_user;
