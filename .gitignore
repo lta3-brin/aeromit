@@ -1,2 +1,37 @@
 target
 .env
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+src_ui/node_modules
+src_ui/.pnp
+src_ui/.pnp.js
+
+# testing
+src_ui/coverage
+
+# next.js
+src_ui/.next/
+src_ui/out/
+
+# production
+src_ui/build
+
+# misc
+src_ui/.DS_Store
+src_ui/*.pem
+
+# debug
+src_ui/npm-debug.log*
+src_ui/yarn-debug.log*
+src_ui/yarn-error.log*
+
+# local env files
+src_ui/.env.local
+src_ui/.env.development.local
+src_ui/.env.test.local
+src_ui/.env.production.local
+
+# vercel
+src_ui/.vercel

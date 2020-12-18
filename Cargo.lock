@@ -303,7 +303,7 @@ dependencies = [
 
 [[package]]
 name = "aeromit"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "actix-session",
  "actix-web",
