@@ -35,6 +35,10 @@ pub struct KegiatanDto {
     /// kapan kegiatan diadakan
     pub kapan: String,
 
+    /// pembicara dalam kegiatan terkait
+    #[validate(length(min = 3))]
+    pub pembicara: String,
+
     /// dimana kegiatan diadakan
     #[validate(length(min = 3))]
     pub ruang: String,

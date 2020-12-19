@@ -54,6 +54,7 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
         let kapan = dok.get_datetime("kapan")?;
         let nama = dok.get_str("nama")?;
         let ruang = dok.get_str("ruang")?;
+        let pembicara = dok.get_str("pembicara")?;
 
         let diubah = <AppHelpers as AppHelpersTrait>::last_modified(
             dok.get("lastModified")
@@ -68,6 +69,7 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
             nama: nama.to_string(),
             kapan: *kapan,
             ruang: ruang.to_string(),
+            pembicara: pembicara.to_string(),
             tautan_video,
             last_modified: diubah
         })
@@ -112,15 +114,18 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
                     "nama": payload.0.nama,
                     "kapan": bson_dt,
                     "ruang": payload.0.ruang,
-                    "tautanVideo": tautan_video
-                }
+                    "tautanVideo": tautan_video,
+                    "pembicara": payload.0.pembicara
+                },
+                "$currentDate": { "lastModified": true }
             };
         } else {
             dok = doc! {
                 "nama": payload.0.nama,
                 "kapan": bson_dt,
                 "ruang": payload.0.ruang,
-                "tautanVideo": tautan_video
+                "tautanVideo": tautan_video,
+                "pembicara": payload.0.pembicara
             };
         }
 
