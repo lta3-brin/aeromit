@@ -1,6 +1,6 @@
 [package]
 name = "aeromit"
-version = "0.2.7"
+version = "0.2.8"
 authors = ["4KB4RPN136"]
 edition = "2018"
 
