@@ -26,7 +26,7 @@ use crate::app::permissions::UserPermissions;
 /// # Fungsi by_id
 ///
 /// Fungsi ini untuk menampilkan _response_ umpan balik hasil hapus pengguna sesuai id
-/// saat mengunjungi _endpoint root_ `v1/pengguna`.
+/// saat mengunjungi _endpoint root_ `v1/pengguna/{id}`.
 ///
 /// <br />
 ///
