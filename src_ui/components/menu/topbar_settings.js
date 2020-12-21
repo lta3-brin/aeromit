@@ -31,17 +31,6 @@ const StyledMenu = withStyles({
   />
 ));
 
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
-
 export default function TopbarSetting() {
   const router = useRouter();
   const classes = useStyles()
@@ -72,18 +61,27 @@ export default function TopbarSetting() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <StyledMenuItem>
+        <MenuItem onClick={() => {
+          router.push("profil").then(() => {
+            handleClose()
+          })
+        }}>
           <ListItemIcon>
             <AccountCircle fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Profil" />
-        </StyledMenuItem>
-        <StyledMenuItem>
+        </MenuItem>
+
+        <MenuItem onClick={() => {
+          router.push("masuk").then(() => {
+            handleClose()
+          })
+        }}>
           <ListItemIcon>
             <ExitToAppOutlined fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Keluar" />
-        </StyledMenuItem>
+        </MenuItem>
       </StyledMenu>
     </div>
   )
