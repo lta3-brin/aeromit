@@ -13,6 +13,7 @@
             round
             icon="home"
             aria-label="Home"
+            @click="goToHome"
           />
 
           <q-btn
@@ -41,10 +42,15 @@
 </template>
 
 <script>
+import {goToHome} from '../handlers/layouts'
+
 export default {
   name: 'MainLayout',
   data () {
     return {}
+  },
+  methods: {
+    goToHome
   }
 }
 </script>
