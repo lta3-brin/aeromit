@@ -36,7 +36,7 @@
       </q-toolbar>
     </q-header>
 
-    <Dialog :open="open" />
+    <Dialog />
 
     <q-page-container>
       <router-view />
@@ -51,9 +51,7 @@ import Dialog from "components/layouts/InfoDialog";
 export default {
   name: 'MainLayout',
   data () {
-    return {
-      open: false
-    }
+    return {}
   },
   components: {
     Dialog
@@ -61,7 +59,7 @@ export default {
   methods: {
     goToHome,
     clicked: function() {
-      this.open = !this.open
+      this.$store.commit('layouts/openDialogMutation', true)
     }
   }
 }
