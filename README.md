@@ -16,25 +16,17 @@ DATABASE_URL=mongodb+srv://<USER>:<PASSWORD>@<HOST>/<database_name>?retryWrites=
 Pengembangan UI dilakukan secara terpisah (_decouple_) dari sisi _backend_ dan terletak didalam
 direktori `src_ui`.
 
-Pengembangan ui dilakukan menggunakan [Next.js](https://nextjs.org/) dan dibuat melalui _cli_ [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Pengembangan ui dilakukan menggunakan [Quasar](https://quasar.dev/) dan dibuat melalui _cli_ 
+[`quasar create .`](https://quasar.dev/quasar-cli/installation#Introduction).
 
 ### Cara Memulai
 
 Pertama, jalankan development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
+quasar dev
 ```
 
-Buka browser dengan alamat [http://localhost:3000](http://localhost:3000) untuk melihat halaman utama.
+Buka browser dengan alamat [http://localhost:8080](http://localhost:8080) untuk melihat halaman utama.
 
-Modifikasi halaman misalkan `pages/index.js`. Halaman terkait akan otomatis diperbarui.
-
-### Pelajari Selanjutnya
-
-Untuk mempelajari lebih tentang Next.js, silahkan masuk ke halaman berikut ini:
-
-- [Dokumentasi Next.js](https://nextjs.org/docs) - pelajari tentang fitur-fitur Next.js dan API.
-- [Belajar Next.js](https://nextjs.org/learn) - seri belajar interaktif Next.js.
+Modifikasi halaman misalkan `pages/Index.vue`. Halaman terkait akan otomatis diperbarui.
