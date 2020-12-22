@@ -22,6 +22,7 @@
             round
             icon="info"
             aria-label="info"
+            @click="clicked"
           />
 
           <q-btn
@@ -35,6 +36,8 @@
       </q-toolbar>
     </q-header>
 
+    <Dialog :open="open" />
+
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -43,14 +46,23 @@
 
 <script>
 import {goToHome} from '../handlers/layouts'
+import Dialog from "components/layouts/InfoDialog";
 
 export default {
   name: 'MainLayout',
   data () {
-    return {}
+    return {
+      open: false
+    }
+  },
+  components: {
+    Dialog
   },
   methods: {
-    goToHome
+    goToHome,
+    clicked: function() {
+      this.open = !this.open
+    }
   }
 }
 </script>
