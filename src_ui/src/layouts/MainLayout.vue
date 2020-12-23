@@ -31,12 +31,14 @@
             round
             icon="settings"
             aria-label="Menu"
-          />
+          >
+            <MenuSettings />
+          </q-btn>
         </div>
       </q-toolbar>
     </q-header>
 
-    <Dialog />
+    <InfoDialog />
 
     <q-page-container>
       <router-view />
@@ -45,8 +47,9 @@
 </template>
 
 <script>
-import {goToHome} from '../handlers/layouts'
-import Dialog from "components/layouts/InfoDialog";
+import {goToHome} from "../handlers/layouts"
+import InfoDialog from "components/layouts/InfoDialog"
+import MenuSettings from "components/layouts/MenuSettings";
 
 export default {
   name: 'MainLayout',
@@ -54,7 +57,8 @@ export default {
     return {}
   },
   components: {
-    Dialog
+    InfoDialog,
+    MenuSettings
   },
   methods: {
     goToHome,
