@@ -11,9 +11,9 @@
 //! ```
 use actix_web::web;
 use chrono::{DateTime, Utc};
-use mongodb::bson::{Document, Bson, doc};
+use mongodb::bson::{self, Document, Bson, doc};
 use crate::kegiatan::dto::KegiatanDto;
-use crate::kegiatan::models::Kegiatan;
+use crate::kegiatan::models::{Kegiatan, Pembicara};
 use crate::app::{
     errors::AppErrors,
     helpers::{AppHelpers, AppHelpersTrait}
@@ -55,6 +55,14 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
         let nama = dok.get_str("nama")?;
         let ruang = dok.get_str("ruang")?;
         let moderator = dok.get_str("moderator")?;
+        let dok_pembicara = dok.get_array("pembicara")?;
+
+        let mut koleksi_pembicara: Vec<Pembicara> = vec![];
+        for p in dok_pembicara.to_vec() {
+            let pembicara = bson::from_bson::<Pembicara>(p)?;
+
+            koleksi_pembicara.push(pembicara);
+        };
 
         let diubah = <AppHelpers as AppHelpersTrait>::last_modified(
             dok.get("lastModified")
@@ -70,6 +78,7 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
             kapan: *kapan,
             ruang: ruang.to_string(),
             moderator: moderator.to_string(),
+            pembicara: koleksi_pembicara,
             tautan_video,
             last_modified: diubah
         })
@@ -108,6 +117,15 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
             tautan_video = tautan;
         } else { tautan_video = "".to_string() }
 
+        let pembicara = payload.0.pembicara
+            .into_iter()
+            .map(|setiap| {
+                let dok = doc! {"nama": setiap.nama, "judul": setiap.judul};
+
+                Bson::Document(dok)
+            })
+            .collect::<Vec<_>>();
+
         if update {
             dok = doc! {
                 "$set": {
@@ -115,7 +133,8 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
                     "kapan": bson_dt,
                     "ruang": payload.0.ruang,
                     "tautanVideo": tautan_video,
-                    "moderator": payload.0.moderator
+                    "moderator": payload.0.moderator,
+                    "pembicara": Bson::Array(pembicara)
                 },
                 "$currentDate": { "lastModified": true }
             };
@@ -125,7 +144,8 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
                 "kapan": bson_dt,
                 "ruang": payload.0.ruang,
                 "tautanVideo": tautan_video,
-                "moderator": payload.0.moderator
+                "moderator": payload.0.moderator,
+                "pembicara": Bson::Array(pembicara)
             };
         }
 
