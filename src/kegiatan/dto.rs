@@ -12,6 +12,7 @@
 //! ```
 use serde::Deserialize;
 use validator::Validate;
+use crate::kegiatan::models::Pembicara;
 
 
 /// Struct sebagai data transfer object untuk _Query URL_.
@@ -35,9 +36,13 @@ pub struct KegiatanDto {
     /// kapan kegiatan diadakan
     pub kapan: String,
 
-    /// pembicara dalam kegiatan terkait
+    /// moderator dalam kegiatan terkait
     #[validate(length(min = 3))]
     pub moderator: String,
+
+    /// pembicara dalam kegiatan terkait
+    #[validate(length(min = 1))]
+    pub pembicara: Vec<Pembicara>,
 
     /// dimana kegiatan diadakan
     #[validate(length(min = 3))]
