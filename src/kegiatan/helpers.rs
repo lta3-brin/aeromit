@@ -24,7 +24,7 @@ use crate::app::{
 pub trait KegiatanHelpersTrait {
     fn doc_to_kegiatan(dok: Document) -> Result<Kegiatan, AppErrors>;
     fn kegiatan_to_doc(
-        payload: web::Form<KegiatanDto>,
+        payload: web::Json<KegiatanDto>,
         update: bool
     ) -> Result<Document, AppErrors>;
 }
@@ -102,7 +102,7 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
     /// * `Result<Document, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
     /// `Document` dan _Enum_ `AppErrors`.
     fn kegiatan_to_doc(
-        payload: web::Form<KegiatanDto>,
+        payload: web::Json<KegiatanDto>,
         update: bool
     ) -> Result<Document, AppErrors> {
         let dok: Document;

@@ -61,7 +61,7 @@ use crate::kegiatan::services::{
 /// `HttpResponse` dan _Enum_ `AppErrors`.
 #[post("/kegiatan/")]
 pub async fn tambah_kegiatan_handler(
-    payload: web::Form<KegiatanDto>,
+    payload: web::Json<KegiatanDto>,
     session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
@@ -177,7 +177,7 @@ pub async fn baca_kegiatan_tertentu_handler(
 #[put("/kegiatan/{id}/")]
 pub async fn ubah_kegiatan_tertentu_handler(
     id: web::Path<String>,
-    payload: web::Form<KegiatanDto>,
+    payload: web::Json<KegiatanDto>,
     session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
