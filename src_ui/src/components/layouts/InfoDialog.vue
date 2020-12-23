@@ -6,8 +6,8 @@
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        Terima kasih telah menggunakan aplikasi Aeromit BBTA3. Apabila ada pertanyaan, silahkan
-        menghubungi kami.🎧
+        Terima kasih telah menggunakan aplikasi Aeromit BBTA3. 🙏🏼 Apabila ada pertanyaan, silahkan
+        menghubungi kami.
       </q-card-section>
 
       <q-card-actions align="right" class="bg-white text-dark">
