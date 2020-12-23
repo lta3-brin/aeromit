@@ -27,8 +27,8 @@ pub struct Kegiatan {
     /// dimana kegiatan diadakan
     pub ruang: String,
 
-    /// pembicara dalam kegiatan terkait
-    pub pembicara: String,
+    /// moderator dalam kegiatan terkait
+    pub moderator: String,
 
     /// adakah tautan video kegiatan
     #[serde(rename = "tautanVideo")]
