@@ -13,6 +13,7 @@ use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
 
 
+/// Model database kegiatan
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Kegiatan {
     #[serde(rename = "_id")]
@@ -27,8 +28,11 @@ pub struct Kegiatan {
     /// dimana kegiatan diadakan
     pub ruang: String,
 
+    /// moderator dalam kegiatan terkait
+    pub moderator: String,
+
     /// pembicara dalam kegiatan terkait
-    pub pembicara: String,
+    pub pembicara: Vec<Pembicara>,
 
     /// adakah tautan video kegiatan
     #[serde(rename = "tautanVideo")]
@@ -37,4 +41,16 @@ pub struct Kegiatan {
     /// kapan kegiatan diubah
     #[serde(rename = "lastModified")]
     pub last_modified: Option<DateTime<Utc>>,
+}
+
+/// Model Database pembicara
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Pembicara {
+    /// Nama pembicara
+    #[serde(default)]
+    pub nama: String,
+
+    /// Nama judul presentasi
+    #[serde(default)]
+    pub judul: String
 }

@@ -41,7 +41,7 @@ use crate::kegiatan::helpers::{KegiatanHelpers, KegiatanHelpersTrait};
 /// * `Result<(), AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari ()
 /// dan _Enum_ `AppErrors`.
 pub async fn tambah_kegiatan_service(
-    payload: web::Form<KegiatanDto>,
+    payload: web::Json<KegiatanDto>,
     db: web::Data<Database>,
 ) -> Result<(), AppErrors> {
     let collection = db.collection("kegiatan");
@@ -168,7 +168,7 @@ pub async fn baca_kegiatan_tertentu_service(
 /// `()` dan _Enum_ `AppErrors`.
 pub async fn ubah_kegiatan_tertentu_service(
     uid: web::Path<String>,
-    payload: web::Form<KegiatanDto>,
+    payload: web::Json<KegiatanDto>,
     db: web::Data<Database>
 ) -> Result<(), AppErrors> {
     let collection = db.collection("kegiatan");
