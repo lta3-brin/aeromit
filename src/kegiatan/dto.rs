@@ -37,7 +37,7 @@ pub struct KegiatanDto {
 
     /// pembicara dalam kegiatan terkait
     #[validate(length(min = 3))]
-    pub pembicara: String,
+    pub moderator: String,
 
     /// dimana kegiatan diadakan
     #[validate(length(min = 3))]
