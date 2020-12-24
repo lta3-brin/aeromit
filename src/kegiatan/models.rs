@@ -34,6 +34,9 @@ pub struct Kegiatan {
     /// pembicara dalam kegiatan terkait
     pub pembicara: Vec<Pembicara>,
 
+    /// adakah tags untuk kegiatan
+    pub tags: Option<Vec<String>>,
+
     /// adakah tautan video kegiatan
     #[serde(rename = "tautanVideo")]
     pub tautan_video: Option<String>,
