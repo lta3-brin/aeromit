@@ -40,7 +40,7 @@
 
     <InfoDialog />
 
-    <q-page-container>
+    <q-page-container class="q-container">
       <router-view />
     </q-page-container>
   </q-layout>
