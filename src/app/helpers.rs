@@ -10,13 +10,15 @@
 //! use crate::app::helpers::{...}
 //! ```
 use chrono::{DateTime, Utc};
-use mongodb::bson::Bson;
+use mongodb::bson::{self, Bson};
+use crate::app::errors::AppErrors;
 
 
 /// Trait digunakan untuk menerapkan fungsi yang diperlukan oleh masing-masing `Services`.
 pub trait AppHelpersTrait {
     fn last_modified(docu: Option<&Bson>) -> Option<DateTime<Utc>>;
     fn optional_string(docu: Option<&Bson>) -> Option<String>;
+    fn optional_vector(docu: Option<&Bson>) -> Result<Option<Vec<String>>, AppErrors>;
 }
 
 /// Struct untuk memberikan fungsi-fungsi bantuan melalui implementasi
@@ -31,7 +33,7 @@ impl AppHelpersTrait for AppHelpers {
     ///
     /// # Masukan
     ///
-    /// * `docu` - masukan dengan _type_ `Document`.
+    /// * `docu` - masukan dengan _type_ `Option<&Bson>`.
     ///
     /// <br />
     ///
@@ -59,7 +61,7 @@ impl AppHelpersTrait for AppHelpers {
     ///
     /// # Masukan
     ///
-    /// * `docu` - masukan dengan _type_ `Document`.
+    /// * `docu` - masukan dengan _type_ `Option<&Bson>`.
     ///
     /// <br />
     ///
@@ -77,5 +79,40 @@ impl AppHelpersTrait for AppHelpers {
         } else { text = None }
 
         text
+    }
+
+    /// # Fungsi optional_vector
+    ///
+    /// Fungsi ini untuk mendapatkan optional vector String saat dokumen berhasil diubah.
+    ///
+    /// <br />
+    ///
+    /// # Masukan
+    ///
+    /// * `docu` - masukan dengan _type_ `Option<&Bson>`.
+    ///
+    /// <br />
+    ///
+    /// # Keluaran
+    ///
+    /// * `Result<Option<Vec<String>>, AppErrors>` - keluaran berupa _enum_ `Option` yang
+    /// terdiri dari `Option<Vec<String>` dan AppErrors.
+    fn optional_vector(docu: Option<&Bson>) -> Result<Option<Vec<String>>, AppErrors> {
+        if let Some(dok) = docu {
+            if let Some(tags) = dok.as_array() {
+                let mut koleksi: Vec<String> = vec![];
+                let tags = tags.to_vec();
+
+                for tag in tags {
+                    let tg = bson::from_bson::<String>(tag)?;
+
+                    koleksi.push(tg);
+                }
+
+                Ok(Some(koleksi))
+            } else {
+                Ok(None)
+            }
+        } else { Ok(None) }
     }
 }

@@ -44,6 +44,9 @@ pub struct KegiatanDto {
     #[validate(length(min = 1))]
     pub pembicara: Vec<Pembicara>,
 
+    /// tags kegiatan terkait
+    pub tags: Option<Vec<String>>,
+
     /// dimana kegiatan diadakan
     #[validate(length(min = 3))]
     pub ruang: String,

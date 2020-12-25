@@ -72,6 +72,10 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
             dok.get("tautanVideo")
         );
 
+        let tags = <AppHelpers as AppHelpersTrait>::optional_vector(
+            dok.get("tags")
+        )?;
+
         Ok(Kegiatan {
             id: id.to_hex(),
             nama: nama.to_string(),
@@ -79,6 +83,7 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
             ruang: ruang.to_string(),
             moderator: moderator.to_string(),
             pembicara: koleksi_pembicara,
+            tags,
             tautan_video,
             last_modified: diubah
         })
@@ -106,16 +111,15 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
         update: bool
     ) -> Result<Document, AppErrors> {
         let dok: Document;
-        let tautan_video: String;
         let parse_dt = DateTime::parse_from_rfc3339(
             payload.0.kapan.as_str()
         )?;
 
         let bson_dt: Bson = Bson::DateTime(parse_dt.with_timezone(&Utc));
 
-        if let Some(tautan) = payload.0.tautan_video {
-            tautan_video = tautan;
-        } else { tautan_video = "".to_string() }
+        let tautan_video = if let Some(tautan) = payload.0.tautan_video {
+            Bson::String(tautan)
+        } else { Bson::Null };
 
         let pembicara = payload.0.pembicara
             .into_iter()
@@ -126,6 +130,16 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
             })
             .collect::<Vec<_>>();
 
+        let tags = if let Some(tags) = payload.0.tags {
+            let koleksi = tags.into_iter()
+                .map(|setiap| {
+                    Bson::String(setiap)
+                })
+                .collect::<Vec<_>>();
+
+            koleksi
+        } else { vec![] };
+
         if update {
             dok = doc! {
                 "$set": {
@@ -134,7 +148,8 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
                     "ruang": payload.0.ruang,
                     "tautanVideo": tautan_video,
                     "moderator": payload.0.moderator,
-                    "pembicara": Bson::Array(pembicara)
+                    "pembicara": pembicara,
+                    "tags": tags
                 },
                 "$currentDate": { "lastModified": true }
             };
@@ -145,7 +160,8 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
                 "ruang": payload.0.ruang,
                 "tautanVideo": tautan_video,
                 "moderator": payload.0.moderator,
-                "pembicara": Bson::Array(pembicara)
+                "pembicara": Bson::Array(pembicara),
+                "tags": tags
             };
         }
 
