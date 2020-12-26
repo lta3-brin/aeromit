@@ -1,15 +1,21 @@
 <template>
   <q-card flat bordered>
     <q-card-section>
-      <div class="text-overline ellipsis">Tempat pelaksanaan</div>
-      <div class="text-h6 q-mt-sm ellipsis-2-lines">Judul Kegiatan Aktif Dilaksanakan</div>
+      <div class="text-overline ellipsis">{{ data['ruang'] }}</div>
+      <div class="text-h6 q-mt-sm ellipsis-2-lines">
+        {{ data['nama'] }}
+      </div>
     </q-card-section>
 
     <q-card-section>
       <div>
-        <q-chip icon="bookmark" size="sm">aero</q-chip>
-        <q-chip icon="bookmark" size="sm">teknologi</q-chip>
-        <q-chip icon="bookmark" size="sm">bbta3</q-chip>
+        <q-chip icon="bookmark"
+                size="sm"
+                v-for="tag in data['tags']"
+                :key="tag"
+        >
+          {{ tag }}
+        </q-chip>
       </div>
     </q-card-section>
 
@@ -27,8 +33,8 @@
 <script>
 export default {
   name: 'ActivityPageComponent',
-  data () {
-    return {}
+  props: {
+    data: Object
   }
 }
 </script>
