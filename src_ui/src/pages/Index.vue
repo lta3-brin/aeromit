@@ -50,14 +50,23 @@ export default {
   async created() {
     this.$q.loadingBar.start()
     try {
-      this.koleksi = this.fetchKegiatan(await this.$store.dispatch("kegiatan/kegiatanAction"))
+      const kegiatan = this.fetchKegiatan(await this.$store.dispatch("kegiatan/kegiatanAction"))
+
       this.errorMessage = ""
       this.anyError = false
       this.$q.loadingBar.stop()
+
+      this.$store.commit('kegiatan/kegiatanMutation', kegiatan)
+      this.koleksi = this.$store.getters['kegiatan/kegiatanHasilGetter']
     } catch (err) {
-      this.errorMessage = err.message
       this.anyError = true
       this.$q.loadingBar.stop()
+
+      this.$store.commit('kegiatan/kegiatanMutation',
+        {'pesan': err.message, 'status': false, hasil: []}
+      )
+      this.errorMessage = this.$store.getters['kegiatan/kegiatanPesanGetter']
+
     }
   },
   methods: {
