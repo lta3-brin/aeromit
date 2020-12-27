@@ -1,3 +1,3 @@
 export function fetchKegiatan(payload) {
-  return payload.data['hasil']
+  return payload.data
 }
