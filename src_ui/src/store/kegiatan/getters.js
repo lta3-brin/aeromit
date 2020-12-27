@@ -5,7 +5,3 @@ export function kegiatanHasilGetter (state) {
 export function kegiatanPesanGetter (state) {
   return state.kegiatan.pesan
 }
-
-export function kegiatanErrorGetter (state) {
-  return state.kegiatan_error
-}
