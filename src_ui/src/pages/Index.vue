@@ -9,6 +9,10 @@
           <template v-slot:avatar>
             <q-icon name="announcement" color="white" size="md" />
           </template>
+
+          <template v-slot:action v-if="statusCode === 401">
+            <q-btn flat color="white" label="LOGIN" @click="goToPage('login')" />
+          </template>
         </q-banner>
       </div>
 
@@ -34,6 +38,7 @@
 <script>
 import ActivityCard from "components/pages/ActivityCard"
 import {fetchKegiatan} from "../handlers/pages/utama"
+import {goToPage} from "../handlers/components/menu"
 
 export default {
   name: 'PageIndex',
@@ -44,7 +49,8 @@ export default {
     return {
       anyError: false,
       errorMessage: "",
-      koleksi: []
+      koleksi: [],
+      statusCode: 0
     }
   },
   async created() {
@@ -62,15 +68,26 @@ export default {
       this.anyError = true
       this.$q.loadingBar.stop()
 
-      this.$store.commit('kegiatan/kegiatanMutation',
-        {'pesan': err.message, 'status': false, hasil: []}
-      )
-      this.errorMessage = this.$store.getters['kegiatan/kegiatanPesanGetter']
+      if (err.response) {
+        this.statusCode = err.response.status
+        this.$store.commit('kegiatan/kegiatanMutation', err.response.data)
+      } else {
+        this.statusCode = 500
+        this.$store.commit('kegiatan/kegiatanMutation', {
+          sukses: false,
+          pesan: "Terjadi kesalahan yang perlu diperhatikan",
+          hasil: err.message
+        })
+      }
+
+      const hasil = this.$store.getters['kegiatan/kegiatanHasilGetter']
+      this.errorMessage = `${hasil}.`
 
     }
   },
   methods: {
-    fetchKegiatan
+    fetchKegiatan,
+    goToPage
   }
 }
 </script>

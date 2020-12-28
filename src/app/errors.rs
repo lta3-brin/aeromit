@@ -38,6 +38,9 @@ pub enum AppErrors {
     InputValidationError(validator::ValidationErrors),
     HashingError(argon2::Error),
     JwtError(jsonwebtoken::errors::Error),
+
+    #[display(fmt = "Pengguna belum terotentikasi")]
+    UnauthorizeUser
 }
 
 /// Implementasi `AppErrors` apabila terjadi kesalahan seputar `env::VarError`
@@ -133,6 +136,7 @@ impl ResponseError for AppErrors {
             AppErrors::InputValidationError(..) => StatusCode::BAD_REQUEST,
             AppErrors::ActixWebError(..) => StatusCode::BAD_REQUEST,
             AppErrors::JwtError(..) => StatusCode::NOT_ACCEPTABLE,
+            AppErrors::UnauthorizeUser => StatusCode::UNAUTHORIZED,
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }

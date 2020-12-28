@@ -1,9 +1,10 @@
 <template>
-  <q-card flat bordered>
+  <q-card flat bordered class="q-mx-sm">
     <q-card-section>
       <div class="text-overline ellipsis">{{ data['ruang'] }}</div>
       <div class="text-h6 q-mt-sm ellipsis-2-lines">
         {{ data['nama'] }}
+        <br /> <br />
       </div>
     </q-card-section>
 
