@@ -19,6 +19,7 @@ async fn main() -> Result<(), AppErrors> {
     let db = AppConfigs::database_connection().await?;
     let server = HttpServer::new(move || {
         App::new()
+            .wrap(Middlewares::set_cors())
             .wrap(Middlewares::build_logger())
             .wrap(Middlewares::normalize_path())
             .wrap(Middlewares::handle_session())

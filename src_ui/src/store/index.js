@@ -1,7 +1,8 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue"
+import Vuex from "vuex"
 
-import layouts from './layouts'
+import layouts from "./layouts"
+import kegiatan from "./kegiatan"
 
 Vue.use(Vuex)
 
@@ -17,7 +18,8 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      layouts
+      layouts,
+      kegiatan
     },
 
     // enable strict mode (adds overhead!)
