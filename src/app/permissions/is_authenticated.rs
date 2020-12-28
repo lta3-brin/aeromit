@@ -1,6 +1,5 @@
 use std::env;
 use actix_session::Session;
-use actix_web::error::ErrorUnauthorized;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use crate::app::errors::AppErrors;
 use crate::pengguna::models::Klaim;
@@ -25,9 +24,7 @@ impl UserPermissions {
     /// yang terdiri dari () dan _enum_ `AppErrors`
     pub fn is_authenticated(session: Session) -> Result<(), AppErrors> {
         let has_token = session.get::<String>("masuk")?;
-        let error_message = AppErrors::ActixWebError(
-            ErrorUnauthorized("Pengguna tidak terotentikasi")
-        );
+        let error_message = AppErrors::UnauthorizeUser;
 
         if let Some(token) = has_token {
             let secret = env::var("APP_SECRET")?;
