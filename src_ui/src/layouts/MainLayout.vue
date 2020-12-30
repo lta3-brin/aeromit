@@ -46,25 +46,4 @@
   </q-layout>
 </template>
 
-<script>
-import {goToHome} from "../handlers/layouts"
-import InfoDialog from "components/layouts/InfoDialog"
-import MenuSettings from "components/layouts/MenuSettings";
-
-export default {
-  name: 'MainLayout',
-  data () {
-    return {}
-  },
-  components: {
-    InfoDialog,
-    MenuSettings
-  },
-  methods: {
-    goToHome,
-    clicked: function() {
-      this.$store.commit('layouts/openDialogMutation', true)
-    }
-  }
-}
-</script>
+<script src="../handlers/layouts/MainLayout.js" />
