@@ -35,4 +35,4 @@
   </q-page>
 </template>
 
-<script src="../handlers/pages/utama.js" />
+<script src="./utama.js" />

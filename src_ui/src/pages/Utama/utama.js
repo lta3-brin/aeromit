@@ -1,5 +1,5 @@
-import ActivityCard from "components/pages/ActivityCard"
-import {goToPage} from "../components/menu"
+import ActivityCard from "src/components/ActivityCard/ActivityCard"
+import {goToPage} from "src/handlers/menu"
 
 function fetchKegiatan(payload) {
   return payload.data
