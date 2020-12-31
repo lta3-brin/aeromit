@@ -1,6 +1,6 @@
-import {goToHome} from "."
-import InfoDialog from "components/layouts/InfoDialog"
-import MenuSettings from "components/layouts/MenuSettings"
+import {goToHome} from "src/handlers/layout"
+import InfoDialog from "src/components/InfoDialog/InfoDialog.vue"
+import MenuSettings from "src/components/MenuSettings/MenuSettings.vue"
 
 export default {
   name: 'MainLayout',
