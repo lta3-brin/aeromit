@@ -113,4 +113,4 @@
   </q-card>
 </template>
 
-<script src="../../handlers/components/card/ActivityCard.js" />
+<script src="ActivityCard.js" />
