@@ -20,4 +20,4 @@
   </q-menu>
 </template>
 
-<script src="../../handlers/components/menu/MenuSettings.js" />
+<script src="./MenuSettings.js" />

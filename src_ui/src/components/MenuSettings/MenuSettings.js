@@ -1,4 +1,4 @@
-import {goToPage} from "src/handlers/components/menu/index";
+import {goToPage} from "src/handlers/menu";
 
 
 export default {
