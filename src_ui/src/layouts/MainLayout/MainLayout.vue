@@ -46,4 +46,4 @@
   </q-layout>
 </template>
 
-<script src="../handlers/layouts/MainLayout.js" />
+<script src="./MainLayout.js" />
