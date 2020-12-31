@@ -58,4 +58,4 @@
   </q-page>
 </template>
 
-<script src="../handlers/pages/masuk.js" />
+<script src="./login.js" />

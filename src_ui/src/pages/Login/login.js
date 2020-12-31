@@ -1,5 +1,4 @@
 import axios from "axios"
-import { Cookies } from 'quasar'
 import urlencoded from "form-urlencoded"
 import {validate} from "email-validator"
 
