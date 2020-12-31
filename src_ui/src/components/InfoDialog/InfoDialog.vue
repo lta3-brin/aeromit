@@ -18,5 +18,5 @@
   </q-dialog>
 </template>
 
-<script src="../../handlers/components/dialog/InfoDialog.js" />
+<script src="./InfoDialog.js" />
 

@@ -1,4 +1,4 @@
-import {goToExternal} from "src/handlers/layouts"
+import {goToExternal} from "src/handlers/layout"
 
 export default {
   name: 'DialogComponent',
