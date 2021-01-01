@@ -11,6 +11,7 @@
 //! ```
 use chrono::{DateTime, Utc};
 use mongodb::bson::{self, Bson};
+use actix_web::http::HeaderValue;
 use crate::app::errors::AppErrors;
 
 
@@ -19,6 +20,7 @@ pub trait AppHelpersTrait {
     fn last_modified(docu: Option<&Bson>) -> Option<DateTime<Utc>>;
     fn optional_string(docu: Option<&Bson>) -> Option<String>;
     fn optional_vector(docu: Option<&Bson>) -> Result<Option<Vec<String>>, AppErrors>;
+    fn get_token(headers: Option<&HeaderValue>) -> Result<String, AppErrors>;
 }
 
 /// Struct untuk memberikan fungsi-fungsi bantuan melalui implementasi
@@ -114,5 +116,17 @@ impl AppHelpersTrait for AppHelpers {
                 Ok(None)
             }
         } else { Ok(None) }
+    }
+
+    fn get_token(headers: Option<&HeaderValue>) -> Result<String, AppErrors> {
+        let token = if let Some(token) = headers {
+            let res = token.to_str()?;
+
+            res.replace("Bearer ", "")
+        } else {
+            "".to_string()
+        };
+
+        Ok(token)
     }
 }

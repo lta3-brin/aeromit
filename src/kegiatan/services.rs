@@ -199,18 +199,18 @@ pub async fn ubah_kegiatan_tertentu_service(
 ///
 /// # Keluaran
 ///
-/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
-/// `()` dan _Enum_ `AppErrors`.
+/// * `Result<i64, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// `i64` dan _Enum_ `AppErrors`.
 pub async fn hapus_kegiatan_tertentu_service(
     uid: web::Path<String>,
     db: web::Data<Database>
-) -> Result<(), AppErrors> {
+) -> Result<i64, AppErrors> {
     let id = ObjectId::with_string(uid.trim())?;
     let collection = db.collection("kegiatan");
 
-    collection
+    let res = collection
         .delete_one(doc! {"_id": id}, None)
         .await?;
 
-    Ok(())
+    Ok(res.deleted_count)
 }

@@ -10,8 +10,7 @@
 //! ```rust
 //! use crate::pengguna::handlers::check_user::{...}
 //! ```
-use actix_session::Session;
-use actix_web::{get, HttpResponse};
+use actix_web::{get, HttpResponse, HttpRequest};
 use crate::app::dto::UmpanBalik;
 use crate::app::errors::AppErrors;
 use crate::pengguna::services::check_user;
@@ -35,8 +34,8 @@ use crate::pengguna::services::check_user;
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
 #[get("pengguna/check/")]
-pub async fn is_ok(session: Session) -> Result<HttpResponse, AppErrors> {
-    let checked = check_user::run(session)?;
+pub async fn is_ok(req: HttpRequest) -> Result<HttpResponse, AppErrors> {
+    let checked = check_user::run(req)?;
 
     if checked {
         let res = UmpanBalik::new(
