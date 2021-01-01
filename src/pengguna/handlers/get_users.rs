@@ -10,10 +10,7 @@
 //! use crate::pengguna::handlers::get_users::{...}
 //! ```
 use mongodb::Database;
-use actix_web::{
-    web,
-    HttpResponse,
-};
+use actix_web::{web, HttpResponse, HttpRequest};
 use crate::app::dto::UmpanBalik;
 use crate::app::errors::AppErrors;
 use crate::pengguna::{
@@ -43,9 +40,10 @@ use crate::app::permissions::UserPermissions;
 /// `HttpResponse` dan _Enum_ `AppErrors`.
 pub async fn all(
     doc_props: web::Query<DocProps>,
+    req: HttpRequest,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_admin(db.clone()).await?;
+    UserPermissions::is_admin(req, db.clone()).await?;
 
     let seluruh_pengguna = get_users::all(doc_props, db).await?;
     let res = UmpanBalik::new(
