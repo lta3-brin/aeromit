@@ -87,9 +87,7 @@ pub async fn verify(
                     &EncodingKey::from_secret(secret.as_bytes())
                 )?;
 
-                session.set("masuk", token)?;
-
-                Ok(Some("Selamat datang di Aeromit".to_string()))
+                Ok(Some(token))
             } else { Ok(None) }
         }
         None => Ok(None)
