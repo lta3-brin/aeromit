@@ -38,6 +38,7 @@ pub enum AppErrors {
     InputValidationError(validator::ValidationErrors),
     HashingError(argon2::Error),
     JwtError(jsonwebtoken::errors::Error),
+    HandleToStrError(header::ToStrError),
 
     #[display(fmt = "Pengguna belum terotentikasi")]
     UnauthorizeUser
@@ -124,6 +125,13 @@ impl From<jsonwebtoken::errors::Error> for AppErrors {
 impl From<ParseIntError> for AppErrors {
     fn from(err: ParseIntError) -> Self {
         Self::ParseIntegerError(err)
+    }
+}
+
+/// Implementasi `AppErrors` apabila terjadi kesalahan seputar `header::ToStrError`
+impl From<header::ToStrError> for AppErrors {
+    fn from(err: header::ToStrError) -> Self {
+        Self::HandleToStrError(err)
     }
 }
 
