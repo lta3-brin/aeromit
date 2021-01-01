@@ -4,7 +4,6 @@ use mongodb::{
     Database,
     bson::{self, doc, Document}
 };
-use actix_session::Session;
 use actix_web::error::ErrorUnauthorized;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use crate::app::errors::AppErrors;
@@ -30,8 +29,7 @@ impl UserPermissions {
     ///
     /// * `Result<(), AppErrors>` - keluaran berupa enum `Result`
     /// yang terdiri dari () dan _enum_ `AppErrors`
-    pub async fn is_admin(session: Session, db: web::Data<Database>) -> Result<(), AppErrors> {
-        let has_token = session.get::<String>("masuk")?;
+    pub async fn is_admin(db: web::Data<Database>) -> Result<(), AppErrors> {
         let error_message = AppErrors::ActixWebError(
             ErrorUnauthorized("Hak akses tidak ditemukan.")
         );

@@ -10,7 +10,6 @@
 //! use crate::pengguna::handlers::get_user::{...}
 //! ```
 use mongodb::Database;
-use actix_session::Session;
 use actix_web::{
     web,
     HttpResponse,
@@ -42,10 +41,9 @@ use crate::app::permissions::UserPermissions;
 /// `HttpResponse` dan _Enum_ `AppErrors`.
 pub async fn by_id(
     id: web::Path<String>,
-    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_admin(session, db.clone()).await?;
+    UserPermissions::is_admin(db.clone()).await?;
     let pengguna_tertentu = get_user::by_id(id, db).await?;
 
     if pengguna_tertentu.is_none() {

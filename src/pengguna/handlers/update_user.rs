@@ -10,7 +10,6 @@
 //! use crate::pengguna::handlers::update_user::{...}
 //! ```
 use mongodb::Database;
-use actix_session::Session;
 use actix_web::{
     web,
     HttpResponse,
@@ -47,10 +46,9 @@ use crate::app::permissions::UserPermissions;
 pub async fn save(
     id: web::Path<String>,
     payload: web::Form<UbahPenggunaDto>,
-    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_admin(session, db.clone()).await?;
+    UserPermissions::is_admin(db.clone()).await?;
 
     let count = update_user::save(id, payload, db).await?;
 

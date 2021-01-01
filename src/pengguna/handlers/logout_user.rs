@@ -13,7 +13,6 @@ use actix_web::{
     post,
     HttpResponse,
 };
-use actix_session::Session;
 use crate::app::errors::AppErrors;
 use crate::app::dto::UmpanBalik;
 use crate::pengguna::services::logout_user;
@@ -37,8 +36,8 @@ use crate::pengguna::services::logout_user;
 /// * `Result<HttpResponse, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `HttpResponse` dan _Enum_ `AppErrors`.
 #[post("/pengguna/logout/")]
-pub async fn keluar(session: Session) -> Result<HttpResponse, AppErrors> {
-    logout_user::run(session).await?;
+pub async fn keluar() -> Result<HttpResponse, AppErrors> {
+    logout_user::run().await?;
 
     let res = UmpanBalik::new(
         true,

@@ -12,7 +12,6 @@
 //! ```rust
 //! use crate::kegiatan::handlers::{...}
 //! ```
-use actix_session::Session;
 use mongodb::{
     bson::doc,
     Database,
@@ -62,10 +61,9 @@ use crate::kegiatan::services::{
 #[post("/kegiatan/")]
 pub async fn tambah_kegiatan_handler(
     payload: web::Json<KegiatanDto>,
-    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_admin(session, db.clone()).await?;
+    UserPermissions::is_admin(db.clone()).await?;
 
     tambah_kegiatan_service(payload, db).await?;
 
@@ -100,10 +98,9 @@ pub async fn tambah_kegiatan_handler(
 #[get("/kegiatan/")]
 pub async fn baca_kegiatan_handler(
     doc_props: web::Query<DocProps>,
-    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_authenticated(session)?;
+    UserPermissions::is_authenticated()?;
 
     let koleksi_kegiatan = baca_kegiatan_service(doc_props, db).await?;
 
@@ -138,10 +135,9 @@ pub async fn baca_kegiatan_handler(
 #[get("/kegiatan/{id}/")]
 pub async fn baca_kegiatan_tertentu_handler(
     id: web::Path<String>,
-    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_authenticated(session)?;
+    UserPermissions::is_authenticated()?;
 
     let kegiatan = baca_kegiatan_tertentu_service(id, db).await?;
 
@@ -178,10 +174,9 @@ pub async fn baca_kegiatan_tertentu_handler(
 pub async fn ubah_kegiatan_tertentu_handler(
     id: web::Path<String>,
     payload: web::Json<KegiatanDto>,
-    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_admin(session, db.clone()).await?;
+    UserPermissions::is_admin(db.clone()).await?;
 
     ubah_kegiatan_tertentu_service(id, payload, db).await?;
 
@@ -216,10 +211,9 @@ pub async fn ubah_kegiatan_tertentu_handler(
 #[delete("/kegiatan/{id}/")]
 pub async fn hapus_kegiatan_tertentu_handler(
     id: web::Path<String>,
-    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_admin(session, db.clone()).await?;
+    UserPermissions::is_admin(db.clone()).await?;
 
     hapus_kegiatan_tertentu_service(id, db).await?;
 

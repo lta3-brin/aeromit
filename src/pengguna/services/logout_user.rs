@@ -9,7 +9,6 @@
 //! ```rust
 //! use crate::pengguna::services::logout_user::{...}
 //! ```
-use actix_session::Session;
 use crate::app::errors::AppErrors;
 
 
@@ -29,7 +28,7 @@ use crate::app::errors::AppErrors;
 ///
 /// * `Result<bool, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
 /// `()` dan _Enum_ `AppErrors`.
-pub async fn run(session: Session) -> Result<(), AppErrors> {
+pub async fn run() -> Result<(), AppErrors> {
     session.remove("masuk");
 
     Ok(())

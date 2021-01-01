@@ -13,7 +13,6 @@ use argon2;
 use std::env;
 use actix_web::web;
 use validator::Validate;
-use actix_session::Session;
 use chrono::{Utc, Duration};
 use jsonwebtoken::{encode, Header, EncodingKey};
 use mongodb::{
@@ -49,7 +48,6 @@ use crate::pengguna::models::Klaim;
 /// `Option<String>` dan _Enum_ `AppErrors`.
 pub async fn verify(
     payload: web::Form<LoginPenggunaDto>,
-    session: Session,
     db: web::Data<Database>
 ) -> Result<Option<String>, AppErrors> {
     let collection = db.collection("pengguna");
