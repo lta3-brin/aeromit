@@ -1,8 +1,10 @@
 use std::env;
+use actix_web::HttpRequest;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use crate::app::errors::AppErrors;
 use crate::pengguna::models::Klaim;
 use crate::app::permissions::UserPermissions;
+use crate::app::helpers::{AppHelpers, AppHelpersTrait};
 
 impl UserPermissions {
     /// # Fungsi is_authenticated
@@ -21,10 +23,13 @@ impl UserPermissions {
     ///
     /// * `Result<(), AppErrors>` - keluaran berupa enum `Result`
     /// yang terdiri dari () dan _enum_ `AppErrors`
-    pub fn is_authenticated() -> Result<(), AppErrors> {
+    pub fn is_authenticated(req: HttpRequest) -> Result<(), AppErrors> {
         let error_message = AppErrors::UnauthorizeUser;
+        let headers = req.headers().get("authorization");
 
-        if let Some(token) = has_token {
+        let token = <AppHelpers as AppHelpersTrait>::get_token(headers)?;
+
+        if !token.is_empty() {
             let secret = env::var("APP_SECRET")?;
 
             decode::<Klaim>(
