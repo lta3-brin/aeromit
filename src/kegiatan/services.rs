@@ -72,7 +72,7 @@ pub async fn tambah_kegiatan_service(
 /// # Keluaran
 ///
 /// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
-/// kumpulan `Kegiatan` dan _Enum_ `AppErrors`.
+/// `Vec<Kegiatan>` dan _Enum_ `AppErrors`.
 pub async fn baca_kegiatan_service(
     doc_props: web::Query<DocProps>,
     db: web::Data<Database>
@@ -125,7 +125,7 @@ pub async fn baca_kegiatan_service(
 ///
 /// # Keluaran
 ///
-/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// * `Result<Option<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
 /// `Option<Kegiatan>` dan _Enum_ `AppErrors`.
 pub async fn baca_kegiatan_tertentu_service(
     uid: web::Path<String>,
