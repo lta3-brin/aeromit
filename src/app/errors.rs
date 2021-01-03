@@ -38,6 +38,10 @@ pub enum AppErrors {
     InputValidationError(validator::ValidationErrors),
     HashingError(argon2::Error),
     JwtError(jsonwebtoken::errors::Error),
+    HandleToStrError(header::ToStrError),
+
+    #[display(fmt = "Pengguna belum terotentikasi")]
+    UnauthorizeUser
 }
 
 /// Implementasi `AppErrors` apabila terjadi kesalahan seputar `env::VarError`
@@ -124,6 +128,13 @@ impl From<ParseIntError> for AppErrors {
     }
 }
 
+/// Implementasi `AppErrors` apabila terjadi kesalahan seputar `header::ToStrError`
+impl From<header::ToStrError> for AppErrors {
+    fn from(err: header::ToStrError) -> Self {
+        Self::HandleToStrError(err)
+    }
+}
+
 /// Menampilkan kesalahan yang mungkin terjadi dari `AppErrors` kedalam bentuk `ResponseError`
 impl ResponseError for AppErrors {
     fn status_code(&self) -> StatusCode {
@@ -133,6 +144,7 @@ impl ResponseError for AppErrors {
             AppErrors::InputValidationError(..) => StatusCode::BAD_REQUEST,
             AppErrors::ActixWebError(..) => StatusCode::BAD_REQUEST,
             AppErrors::JwtError(..) => StatusCode::NOT_ACCEPTABLE,
+            AppErrors::UnauthorizeUser => StatusCode::UNAUTHORIZED,
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }

@@ -2,11 +2,11 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/MainLayout/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue'), name: 'utama' },
+      { path: '', component: () => import('pages/Utama/Utama.vue'), name: 'utama' },
       { path: 'profil', component: () => import('pages/Profil.vue'), name: 'profil' },
-      { path: 'masuk', component: () => import('pages/Login.vue'), name: 'login' },
+      { path: 'masuk', component: () => import('pages/Login/Login.vue'), name: 'login' },
     ]
   },
 

@@ -1,9 +1,10 @@
 <template>
-  <q-card flat bordered>
+  <q-card flat bordered class="q-mx-sm">
     <q-card-section>
       <div class="text-overline ellipsis">{{ data['ruang'] }}</div>
       <div class="text-h6 q-mt-sm ellipsis-2-lines">
         {{ data['nama'] }}
+        <br /> <br />
       </div>
     </q-card-section>
 
@@ -112,23 +113,4 @@
   </q-card>
 </template>
 
-<script>
-import {date} from 'quasar'
-
-export default {
-  name: 'ActivityPageComponent',
-  data() {
-    return {
-      openDialog: false
-    }
-  },
-  props: {
-    data: Object
-  },
-  filters: {
-    format(val) {
-      return date.formatDate(val, 'DD MMMM YYYY, HH:mm')
-    }
-  }
-}
-</script>
+<script src="ActivityCard.js" />

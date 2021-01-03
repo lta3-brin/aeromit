@@ -1,6 +1,6 @@
 {
   "name": "aeromit",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "description": "pengembangan aplikasi aeromit bbta3 dengan quasar",
   "productName": "Aeromit BBTA3",
   "author": "4KB4RPN136",
@@ -13,6 +13,8 @@
     "@quasar/extras": "^1.0.0",
     "axios": "^0.18.1",
     "core-js": "^3.6.5",
+    "email-validator": "^2.0.4",
+    "form-urlencoded": "^4.2.1",
     "quasar": "^1.0.0"
   },
   "devDependencies": {

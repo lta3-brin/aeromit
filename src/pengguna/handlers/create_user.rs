@@ -10,11 +10,7 @@
 //! use crate::pengguna::handlers::create_user::{...}
 //! ```
 use mongodb::Database;
-use actix_session::Session;
-use actix_web::{
-    web,
-    HttpResponse,
-};
+use actix_web::{web, HttpResponse, HttpRequest};
 use crate::app::dto::UmpanBalik;
 use crate::app::errors::AppErrors;
 use crate::pengguna::{
@@ -45,10 +41,10 @@ use crate::app::permissions::UserPermissions;
 /// `HttpResponse` dan _Enum_ `AppErrors`.
 pub async fn new(
     payload: web::Form<PenggunaDto>,
-    session: Session,
+    req: HttpRequest,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_admin(session, db.clone()).await?;
+    UserPermissions::is_admin(req, db.clone()).await?;
 
     create_user::new(payload, db).await?;
 

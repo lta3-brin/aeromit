@@ -12,16 +12,11 @@
 //! ```rust
 //! use crate::kegiatan::handlers::{...}
 //! ```
-use actix_session::Session;
 use mongodb::{
     bson::doc,
     Database,
 };
-use actix_web::{
-    post, get,
-    put, delete,
-    web, HttpResponse,
-};
+use actix_web::{post, get, put, delete, web, HttpResponse, HttpRequest};
 use crate::app::{
     dto::UmpanBalik,
     errors::AppErrors,
@@ -62,10 +57,10 @@ use crate::kegiatan::services::{
 #[post("/kegiatan/")]
 pub async fn tambah_kegiatan_handler(
     payload: web::Json<KegiatanDto>,
-    session: Session,
+    req: HttpRequest,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_admin(session, db.clone()).await?;
+    UserPermissions::is_admin(req, db.clone()).await?;
 
     tambah_kegiatan_service(payload, db).await?;
 
@@ -100,10 +95,10 @@ pub async fn tambah_kegiatan_handler(
 #[get("/kegiatan/")]
 pub async fn baca_kegiatan_handler(
     doc_props: web::Query<DocProps>,
-    session: Session,
+    req: HttpRequest,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_authenticated(session)?;
+    UserPermissions::is_authenticated(req)?;
 
     let koleksi_kegiatan = baca_kegiatan_service(doc_props, db).await?;
 
@@ -138,10 +133,10 @@ pub async fn baca_kegiatan_handler(
 #[get("/kegiatan/{id}/")]
 pub async fn baca_kegiatan_tertentu_handler(
     id: web::Path<String>,
-    session: Session,
+    req: HttpRequest,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_authenticated(session)?;
+    UserPermissions::is_authenticated(req)?;
 
     let kegiatan = baca_kegiatan_tertentu_service(id, db).await?;
 
@@ -178,10 +173,10 @@ pub async fn baca_kegiatan_tertentu_handler(
 pub async fn ubah_kegiatan_tertentu_handler(
     id: web::Path<String>,
     payload: web::Json<KegiatanDto>,
-    session: Session,
+    req: HttpRequest,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_admin(session, db.clone()).await?;
+    UserPermissions::is_admin(req, db.clone()).await?;
 
     ubah_kegiatan_tertentu_service(id, payload, db).await?;
 
@@ -216,18 +211,28 @@ pub async fn ubah_kegiatan_tertentu_handler(
 #[delete("/kegiatan/{id}/")]
 pub async fn hapus_kegiatan_tertentu_handler(
     id: web::Path<String>,
-    session: Session,
+    req: HttpRequest,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_admin(session, db.clone()).await?;
+    UserPermissions::is_admin(req, db.clone()).await?;
 
-    hapus_kegiatan_tertentu_service(id, db).await?;
+    let count = hapus_kegiatan_tertentu_service(id, db).await?;
 
-    let res = UmpanBalik::new(
-        true,
-        "Kegiatan berhasil dihapus",
-        ()
-    );
+    if count == 0 {
+        let res = UmpanBalik::new(
+            true,
+            "Kegiatan tidak ditemukan",
+            ()
+        );
 
-    Ok(HttpResponse::Ok().json(res))
+        Ok(HttpResponse::NotFound().json(res))
+    } else {
+        let res = UmpanBalik::new(
+            true,
+            "Kegiatan berhasil dihapus",
+            ()
+        );
+
+        Ok(HttpResponse::Ok().json(res))
+    }
 }

@@ -20,17 +20,4 @@
   </q-menu>
 </template>
 
-<script>
-import {goToPage} from "src/handlers/components/menu";
-
-
-export default {
-  name: 'MenuSettingsComponent',
-  data () {
-    return {}
-  },
-  methods: {
-    goToPage
-  }
-}
-</script>
+<script src="./MenuSettings.js" />
