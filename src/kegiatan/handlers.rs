@@ -140,13 +140,23 @@ pub async fn baca_kegiatan_tertentu_handler(
 
     let kegiatan = baca_kegiatan_tertentu_service(id, db).await?;
 
-    let res = UmpanBalik::new(
-        true,
-        "Kegiatan berhasil ditampilkan",
-        kegiatan
-    );
+    if kegiatan.is_some() {
+        let res = UmpanBalik::new(
+            true,
+            "Kegiatan berhasil ditampilkan",
+            kegiatan
+        );
 
-    Ok(HttpResponse::Ok().json(res))
+        Ok(HttpResponse::Ok().json(res))
+    } else {
+        let res = UmpanBalik::new(
+            true,
+            "Kegiatan tidak ditemukan",
+            ()
+        );
+
+        Ok(HttpResponse::NotFound().json(res))
+    }
 }
 
 /// # Fungsi ubah_kegiatan_tertentu_handler
@@ -178,15 +188,25 @@ pub async fn ubah_kegiatan_tertentu_handler(
 ) -> Result<HttpResponse, AppErrors> {
     UserPermissions::is_admin(req, db.clone()).await?;
 
-    ubah_kegiatan_tertentu_service(id, payload, db).await?;
+    let count = ubah_kegiatan_tertentu_service(id, payload, db).await?;
 
-    let res = UmpanBalik::new(
-        true,
-        "Kegiatan berhasil diubah",
-        ()
-    );
+    if count > 0 {
+        let res = UmpanBalik::new(
+            true,
+            "Kegiatan berhasil diubah",
+            ()
+        );
 
-    Ok(HttpResponse::Ok().json(res))
+        Ok(HttpResponse::Ok().json(res))
+    } else {
+        let res = UmpanBalik::new(
+            true,
+            "Kegiatan tidak ditemukan",
+            ()
+        );
+
+        Ok(HttpResponse::NotFound().json(res))
+    }
 }
 
 /// # Fungsi hapus_kegiatan_tertentu_handler
@@ -212,11 +232,22 @@ pub async fn ubah_kegiatan_tertentu_handler(
 pub async fn hapus_kegiatan_tertentu_handler(
     id: web::Path<String>,
     req: HttpRequest,
+    permanent: web::Query<DocProps>,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
     UserPermissions::is_admin(req, db.clone()).await?;
 
-    let count = hapus_kegiatan_tertentu_service(id, db).await?;
+    let selamanyakah = if let Some(selamanya) = permanent.forever {
+        selamanya
+    } else {
+        false
+    };
+
+    let count = hapus_kegiatan_tertentu_service(
+        id,
+        selamanyakah,
+        db
+    ).await?;
 
     if count == 0 {
         let res = UmpanBalik::new(
