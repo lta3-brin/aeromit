@@ -164,24 +164,24 @@ pub async fn baca_kegiatan_tertentu_service(
 ///
 /// # Keluaran
 ///
-/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
-/// `()` dan _Enum_ `AppErrors`.
+/// * `Result<i64, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// jumlah kegiatan yang diubah `i64` dan _Enum_ `AppErrors`.
 pub async fn ubah_kegiatan_tertentu_service(
     uid: web::Path<String>,
     payload: web::Json<KegiatanDto>,
     db: web::Data<Database>
-) -> Result<(), AppErrors> {
+) -> Result<i64, AppErrors> {
     let collection = db.collection("kegiatan");
     let id = ObjectId::with_string(uid.as_str())?;
 
     payload.validate()?;
     let dok = <KegiatanHelpers as KegiatanHelpersTrait>::kegiatan_to_doc(payload, true)?;
 
-    collection
+    let result = collection
         .update_one(doc! {"_id": id}, dok, None)
         .await?;
 
-    Ok(())
+    Ok(result.modified_count)
 }
 
 /// # Fungsi hapus_kegiatan_tertentu_service
