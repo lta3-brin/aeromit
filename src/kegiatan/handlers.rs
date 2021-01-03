@@ -232,11 +232,22 @@ pub async fn ubah_kegiatan_tertentu_handler(
 pub async fn hapus_kegiatan_tertentu_handler(
     id: web::Path<String>,
     req: HttpRequest,
+    permanent: web::Query<DocProps>,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
     UserPermissions::is_admin(req, db.clone()).await?;
 
-    let count = hapus_kegiatan_tertentu_service(id, db).await?;
+    let selamanyakah = if let Some(selamanya) = permanent.forever {
+        selamanya
+    } else {
+        false
+    };
+
+    let count = hapus_kegiatan_tertentu_service(
+        id,
+        selamanyakah,
+        db
+    ).await?;
 
     if count == 0 {
         let res = UmpanBalik::new(
