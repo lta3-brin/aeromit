@@ -193,6 +193,7 @@ pub async fn ubah_kegiatan_tertentu_service(
 /// # Masukan
 ///
 /// * `uid` - id unik dokumen untuk dipilih.
+/// * `permanent` - hapus kegiatan sepenuhnya?
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -203,14 +204,30 @@ pub async fn ubah_kegiatan_tertentu_service(
 /// `i64` dan _Enum_ `AppErrors`.
 pub async fn hapus_kegiatan_tertentu_service(
     uid: web::Path<String>,
+    permanent: bool,
     db: web::Data<Database>
 ) -> Result<i64, AppErrors> {
     let id = ObjectId::with_string(uid.trim())?;
     let collection = db.collection("kegiatan");
 
-    let res = collection
-        .delete_one(doc! {"_id": id}, None)
-        .await?;
+    if permanent {
+        let result = collection
+            .delete_one(doc! {"_id": id}, None)
+            .await?;
 
-    Ok(res.deleted_count)
+        Ok(result.deleted_count)
+    } else {
+        let dok = doc! {
+            "$set": {
+                "aktifkah": false,
+            },
+            "$currentDate": { "lastModified": true }
+        };
+
+        let result = collection
+            .update_one(doc! {"_id": id}, dok, None)
+            .await?;
+
+        Ok(result.modified_count)
+    }
 }
