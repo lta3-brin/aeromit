@@ -34,6 +34,9 @@ pub struct Kegiatan {
     /// pembicara dalam kegiatan terkait
     pub pembicara: Vec<Pembicara>,
 
+    /// kegiatan masih aktif?
+    pub aktifkah: bool,
+
     /// adakah tags untuk kegiatan
     pub tags: Option<Vec<String>>,
 

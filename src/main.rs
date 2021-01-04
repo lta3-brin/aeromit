@@ -22,7 +22,6 @@ async fn main() -> Result<(), AppErrors> {
             .wrap(Middlewares::set_cors())
             .wrap(Middlewares::build_logger())
             .wrap(Middlewares::normalize_path())
-            .wrap(Middlewares::handle_session())
             .data(db.clone())
             .configure(root_route)
     });

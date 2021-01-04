@@ -16,7 +16,7 @@ use crate::pengguna::handlers::{
     create_user, get_users,
     get_user, update_user,
     delete_user, login_user,
-    logout_user, check_user
+    check_user
 };
 
 /// # Fungsi pengguna_route
@@ -59,7 +59,6 @@ pub fn pengguna_route(route: &mut web::ServiceConfig) {
                 .route(web::get().to(get_users::all))
         )
         .service(login_user::masuk)
-        .service(logout_user::keluar)
         .service(check_user::is_ok)
         .service(
             web::resource("/pengguna/{id}/")

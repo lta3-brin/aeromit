@@ -24,6 +24,9 @@ pub struct DocProps {
 
     /// seberapa banyak dokumen yang dilewati
     pub skip: Option<i64>,
+
+    /// hapus kegiatan selamanya?
+    pub forever: Option<bool>,
 }
 
 /// Struct sebagai data transfer object dari pengguna.

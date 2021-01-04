@@ -72,7 +72,7 @@ pub async fn tambah_kegiatan_service(
 /// # Keluaran
 ///
 /// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
-/// kumpulan `Kegiatan` dan _Enum_ `AppErrors`.
+/// `Vec<Kegiatan>` dan _Enum_ `AppErrors`.
 pub async fn baca_kegiatan_service(
     doc_props: web::Query<DocProps>,
     db: web::Data<Database>
@@ -125,7 +125,7 @@ pub async fn baca_kegiatan_service(
 ///
 /// # Keluaran
 ///
-/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// * `Result<Option<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
 /// `Option<Kegiatan>` dan _Enum_ `AppErrors`.
 pub async fn baca_kegiatan_tertentu_service(
     uid: web::Path<String>,
@@ -164,24 +164,24 @@ pub async fn baca_kegiatan_tertentu_service(
 ///
 /// # Keluaran
 ///
-/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
-/// `()` dan _Enum_ `AppErrors`.
+/// * `Result<i64, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// jumlah kegiatan yang diubah `i64` dan _Enum_ `AppErrors`.
 pub async fn ubah_kegiatan_tertentu_service(
     uid: web::Path<String>,
     payload: web::Json<KegiatanDto>,
     db: web::Data<Database>
-) -> Result<(), AppErrors> {
+) -> Result<i64, AppErrors> {
     let collection = db.collection("kegiatan");
     let id = ObjectId::with_string(uid.as_str())?;
 
     payload.validate()?;
     let dok = <KegiatanHelpers as KegiatanHelpersTrait>::kegiatan_to_doc(payload, true)?;
 
-    collection
+    let result = collection
         .update_one(doc! {"_id": id}, dok, None)
         .await?;
 
-    Ok(())
+    Ok(result.modified_count)
 }
 
 /// # Fungsi hapus_kegiatan_tertentu_service
@@ -193,24 +193,41 @@ pub async fn ubah_kegiatan_tertentu_service(
 /// # Masukan
 ///
 /// * `uid` - id unik dokumen untuk dipilih.
+/// * `permanent` - hapus kegiatan sepenuhnya?
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
 ///
 /// # Keluaran
 ///
-/// * `Result<Vec<Kegiatan>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
-/// `()` dan _Enum_ `AppErrors`.
+/// * `Result<i64, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// `i64` dan _Enum_ `AppErrors`.
 pub async fn hapus_kegiatan_tertentu_service(
     uid: web::Path<String>,
+    permanent: bool,
     db: web::Data<Database>
-) -> Result<(), AppErrors> {
+) -> Result<i64, AppErrors> {
     let id = ObjectId::with_string(uid.trim())?;
     let collection = db.collection("kegiatan");
 
-    collection
-        .delete_one(doc! {"_id": id}, None)
-        .await?;
+    if permanent {
+        let result = collection
+            .delete_one(doc! {"_id": id}, None)
+            .await?;
 
-    Ok(())
+        Ok(result.deleted_count)
+    } else {
+        let dok = doc! {
+            "$set": {
+                "aktifkah": false,
+            },
+            "$currentDate": { "lastModified": true }
+        };
+
+        let result = collection
+            .update_one(doc! {"_id": id}, dok, None)
+            .await?;
+
+        Ok(result.modified_count)
+    }
 }

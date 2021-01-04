@@ -56,6 +56,7 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
         let ruang = dok.get_str("ruang")?;
         let moderator = dok.get_str("moderator")?;
         let dok_pembicara = dok.get_array("pembicara")?;
+        let aktifkah = dok.get_bool("aktifkah")?;
 
         let mut koleksi_pembicara: Vec<Pembicara> = vec![];
         for p in dok_pembicara.to_vec() {
@@ -83,6 +84,7 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
             ruang: ruang.to_string(),
             moderator: moderator.to_string(),
             pembicara: koleksi_pembicara,
+            aktifkah,
             tags,
             tautan_video,
             last_modified: diubah
@@ -149,6 +151,7 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
                     "tautanVideo": tautan_video,
                     "moderator": payload.0.moderator,
                     "pembicara": pembicara,
+                    "aktifkah": true,
                     "tags": tags
                 },
                 "$currentDate": { "lastModified": true }
@@ -161,6 +164,7 @@ impl KegiatanHelpersTrait for KegiatanHelpers {
                 "tautanVideo": tautan_video,
                 "moderator": payload.0.moderator,
                 "pembicara": Bson::Array(pembicara),
+                "aktifkah": true,
                 "tags": tags
             };
         }
