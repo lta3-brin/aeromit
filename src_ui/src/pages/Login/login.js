@@ -1,4 +1,5 @@
 import axios from "axios"
+import {Cookies} from "quasar"
 import urlencoded from "form-urlencoded"
 import {validate} from "email-validator"
 
@@ -17,18 +18,19 @@ export default {
       this.$q.loadingBar.start()
 
       try {
-        let data = {
+        const data = {
           email: this.email,
           password: this.password
         }
 
-        let res = await axios.post(
+        const res = await axios.post(
           "http://localhost:8080/v1/pengguna/login/",
-          urlencoded(data),
-          { withCredentials: true }
+          urlencoded(data)
         )
 
-        console.log(res)
+        const token = res.data.hasil.split(".").slice(0, 2).join(".")
+
+        Cookies.set("aeromit", token)
         this.$q.loadingBar.stop()
       } catch (err) {
         this.errorStatus = true
