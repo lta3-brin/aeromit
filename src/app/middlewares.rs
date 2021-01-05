@@ -11,6 +11,7 @@
 //! ```
 use actix_web::middleware::{self, Logger, NormalizePath};
 use actix_cors::Cors;
+use actix_session::CookieSession;
 
 
 /// _Struct_ dijadikan sebagai kumpulan _middlewares_.
@@ -31,5 +32,13 @@ impl Middlewares {
     /// Fungsi ini untuk normalisasi url path
     pub fn normalize_path() -> NormalizePath {
         middleware::NormalizePath::default()
+    }
+
+    /// Fungsi ini untuk kelola _user session_.
+    pub fn handle_session() -> CookieSession {
+        CookieSession::signed(&[0; 32])
+            .secure(false)
+            .http_only(true)
+            .name("aeromit")
     }
 }
