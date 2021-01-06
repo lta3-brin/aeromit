@@ -10,7 +10,6 @@
 //! use crate::pengguna::handlers::login_user::{...}
 //! ```
 use mongodb::Database;
-use actix_session::Session;
 use actix_web::{
     web,
     post,
@@ -34,7 +33,6 @@ use crate::pengguna::{
 /// # Masukan
 ///
 /// * `payload` - inputan pengguna berupa email dan password.
-/// * `session` - actix session.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -46,10 +44,9 @@ use crate::pengguna::{
 #[post("/pengguna/login/")]
 pub async fn masuk(
     payload: web::Form<LoginPenggunaDto>,
-    session: Session,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    let valid = login_user::verify(payload, session, db).await?;
+    let valid = login_user::verify(payload, db).await?;
 
     if valid.is_none() {
         let res = UmpanBalik::new(
