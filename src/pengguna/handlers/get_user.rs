@@ -27,7 +27,7 @@ use crate::app::permissions::UserPermissions;
 /// # Masukan
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
-/// * `session` - Actix session
+/// * `req` - HttpRequest
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -41,7 +41,7 @@ pub async fn by_id(
     req: HttpRequest,
     db: web::Data<Database>,
 ) -> Result<HttpResponse, AppErrors> {
-    UserPermissions::is_admin(req, db.clone()).await?;
+    UserPermissions::is_admin(req,db.clone()).await?;
     let pengguna_tertentu = get_user::by_id(id, db).await?;
 
     if pengguna_tertentu.is_none() {
