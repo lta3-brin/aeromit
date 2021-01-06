@@ -1,6 +1,6 @@
 [package]
 name = "aeromit"
-version = "0.2.15"
+version = "0.2.16"
 authors = ["4KB4RPN136"]
 edition = "2018"
 
@@ -16,7 +16,6 @@ env_logger = "0.8"
 rust-argon2 = "0.8"
 derive_more = "0.99"
 actix-cors = "0.5.3"
-actix-session = "0.4.0"
 serde = { version = "1.0", features = ["derive"] }
 chrono = { version = "0.4", features = ["serde"] }
 validator = { version = "0.12", features = ["derive"] }
