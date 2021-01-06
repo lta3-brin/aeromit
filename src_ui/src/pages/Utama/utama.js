@@ -1,4 +1,4 @@
-import ActivityCard from "src/components/ActivityCard/ActivityCard"
+import ActivityCard from "src/components/ActivityCard/ActivityCard.vue"
 import {goToPage} from "src/handlers/menu"
 
 function fetchKegiatan(payload) {
@@ -47,7 +47,6 @@ export default {
 
       const hasil = this.$store.getters['kegiatan/kegiatanHasilGetter']
       this.errorMessage = `${hasil}.`
-
     }
   },
   methods: {

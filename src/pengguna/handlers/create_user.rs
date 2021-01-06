@@ -30,7 +30,6 @@ use crate::app::permissions::UserPermissions;
 /// # Masukan
 ///
 /// * `payload` - Data masukan dari pengguna untuk tambah pengguna.
-/// * `session` - Actix session
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />

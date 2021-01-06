@@ -28,9 +28,9 @@ export default {
           urlencoded(data)
         )
 
-        const token = res.data.hasil.split(".").slice(0, 2).join(".")
+        const token = res.data.hasil
 
-        Cookies.set("aeromit", token)
+        Cookies.set("_msk", token)
         this.$q.loadingBar.stop()
       } catch (err) {
         this.errorStatus = true

@@ -31,7 +31,7 @@ use crate::app::permissions::UserPermissions;
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
 /// * `payload` - inputan dari pengguna dalam bentuk `Form`.
-/// * `session` - Actix session
+/// * `req` - HttpRequest
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />

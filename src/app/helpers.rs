@@ -118,11 +118,27 @@ impl AppHelpersTrait for AppHelpers {
         } else { Ok(None) }
     }
 
+    /// # Fungsi get_token
+    ///
+    /// Fungsi ini untuk mendapatkan token yang dikirmkan dari pengguna.
+    ///
+    /// <br />
+    ///
+    /// # Masukan
+    ///
+    /// * `headers` - masukan dengan _type_ `Option<&HeaderValue>`.
+    ///
+    /// <br />
+    ///
+    /// # Keluaran
+    ///
+    /// * `Result<String, AppErrors>` - keluaran berupa _enum_ `Result` yang
+    /// terdiri dari `String` dan AppErrors.
     fn get_token(headers: Option<&HeaderValue>) -> Result<String, AppErrors> {
         let token = if let Some(token) = headers {
             let res = token.to_str()?;
 
-            res.replace("Bearer ", "")
+             res.replace("Bearer ", "")
         } else {
             "".to_string()
         };

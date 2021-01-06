@@ -15,7 +15,7 @@ impl UserPermissions {
     ///
     /// # Masukan
     ///
-    /// * `session` - actix session.
+    /// * `req` - HttpRequest.
     ///
     /// <br />
     ///

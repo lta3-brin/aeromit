@@ -29,7 +29,6 @@ use crate::app::permissions::UserPermissions;
 /// # Masukan
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
-/// * `session` - Actix session
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />

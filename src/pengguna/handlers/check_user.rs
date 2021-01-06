@@ -25,7 +25,7 @@ use crate::pengguna::services::check_user;
 ///
 /// # Masukan
 ///
-/// * `session` - Actix session
+/// * `req` - HttpRequest
 ///
 /// <br />
 ///
