@@ -13,7 +13,6 @@ use argon2;
 use std::env;
 use actix_web::web;
 use validator::Validate;
-use actix_session::Session;
 use chrono::{Utc, Duration};
 use jsonwebtoken::{encode, Header, EncodingKey};
 use mongodb::{
@@ -38,18 +37,16 @@ use crate::pengguna::models::Klaim;
 /// # Masukan
 ///
 /// * `payload` - inputan pengguna berupa email dan password.
-/// * `session` - actix session.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
 ///
 /// # Keluaran
 ///
-/// * `Result<bool, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
+/// * `Result<Option<String>, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari
 /// `Option<String>` dan _Enum_ `AppErrors`.
 pub async fn verify(
     payload: web::Form<LoginPenggunaDto>,
-    session: Session,
     db: web::Data<Database>
 ) -> Result<Option<String>, AppErrors> {
     let collection = db.collection("pengguna");
@@ -89,18 +86,10 @@ pub async fn verify(
                     &EncodingKey::from_secret(secret.as_bytes())
                 )?;
 
-                let t = token.split(".")
-                    .collect::<Vec<&str>>();
-
-                if let Some(tkn) = t.last() {
-                    session.set("aeromit", tkn)?;
-
-                    Ok(Some(token))
-                } else {
-                    Ok(None)
-                }
+                Ok(Some(token))
             } else { Ok(None) }
         }
+
         None => Ok(None)
     }
 }
