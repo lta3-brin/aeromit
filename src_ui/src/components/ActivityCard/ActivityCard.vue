@@ -2,21 +2,9 @@
   <q-card flat bordered class="q-mx-sm">
     <q-card-section>
       <div class="text-overline ellipsis">{{ data['ruang'] }}</div>
-      <div class="text-h6 q-mt-sm ellipsis-2-lines">
+      <div class="text-h6 q-mt-sm ellipsis-3-lines">
         {{ data['nama'] }}
         <br /> <br />
-      </div>
-    </q-card-section>
-
-    <q-card-section>
-      <div>
-        <q-chip icon="bookmark"
-                size="sm"
-                v-for="tag in data['tags']"
-                :key="tag"
-        >
-          {{ tag }}
-        </q-chip>
       </div>
     </q-card-section>
 
@@ -88,6 +76,26 @@
 
               <q-separator spaced inset />
             </div>
+
+            <q-item>
+              <q-item-section>
+                <q-item-label>Tags</q-item-label>
+                <q-item-label caption lines="2">
+                  <q-chip size="sm"
+                          v-for="tag in data['tags']"
+                          :key="tag"
+                  >
+                    {{ tag }}
+                  </q-chip>
+                </q-item-label>
+              </q-item-section>
+
+              <q-item-section side center>
+                <q-icon name="local_offer" color="cyan" />
+              </q-item-section>
+            </q-item>
+
+            <q-separator spaced inset />
 
             <q-item>
               <q-item-section>

@@ -7,7 +7,7 @@
 // https://quasar.dev/quasar-cli/quasar-conf-js
 /* eslint-env node */
 
-module.exports = function (/* ctx */) {
+module.exports = function (ctx) {
   return {
     // https://quasar.dev/quasar-cli/supporting-ts
     supportTS: false,
@@ -71,6 +71,13 @@ module.exports = function (/* ctx */) {
           exclude: /node_modules/
         })
       },
+
+      // https://quasar.dev/quasar-cli/handling-process-env#Import-based-on-process.env
+      env: {
+        SERV: ctx.dev
+          ? process.env.HOST_DEV
+          : process.env.HOST_PROD
+      }
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
