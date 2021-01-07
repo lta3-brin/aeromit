@@ -24,7 +24,7 @@ export default {
         }
 
         const res = await axios.post(
-          "http://localhost:8080/v1/pengguna/login/",
+          `${process.env.SERV}/v1/pengguna/login/`,
           urlencoded(data)
         )
 
