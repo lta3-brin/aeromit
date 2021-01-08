@@ -29,7 +29,7 @@ use crate::app::permissions::UserPermissions;
 /// # Masukan
 ///
 /// * `doc_props` - properti dokumen untuk kelola limit dan skip..
-/// * `session` - Actix session
+/// * `req` - HttpRequest
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />

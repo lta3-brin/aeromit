@@ -33,7 +33,6 @@ use crate::pengguna::{
 /// # Masukan
 ///
 /// * `payload` - inputan pengguna berupa email dan password.
-/// * `session` - actix session.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />

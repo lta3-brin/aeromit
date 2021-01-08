@@ -21,7 +21,7 @@ impl UserPermissions {
     ///
     /// # Masukan
     ///
-    /// * `session` - actix session.
+    /// * `request` - HttpRequest.
     /// * `db` - mongodb Database type yang dishare melalui _application state_.
     ///
     /// <br />
@@ -30,8 +30,11 @@ impl UserPermissions {
     ///
     /// * `Result<(), AppErrors>` - keluaran berupa enum `Result`
     /// yang terdiri dari () dan _enum_ `AppErrors`
-    pub async fn is_admin(req: HttpRequest, db: web::Data<Database>) -> Result<(), AppErrors> {
-        let headers = req.headers().get("authorization");
+    pub async fn is_admin(
+        request: HttpRequest,
+        db: web::Data<Database>
+    ) -> Result<(), AppErrors> {
+        let headers = request.headers().get("authorization");
         let error_message = AppErrors::ActixWebError(
             ErrorUnauthorized("Hak akses tidak ditemukan.")
         );

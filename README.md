@@ -21,7 +21,13 @@ Pengembangan ui dilakukan menggunakan [Quasar](https://quasar.dev/) dan dibuat m
 
 ### Cara Memulai
 
-Pertama, jalankan development server:
+Siapkan _Environment Variable_ di terminal/console dengan contoh berikut:
+```
+HOST_DEV=http://127.0.0.1:8080
+HOST_PROD=https://prod.api.com
+```
+
+Jalankan development server:
 
 ```bash
 quasar dev

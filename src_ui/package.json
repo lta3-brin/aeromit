@@ -1,17 +1,18 @@
 {
   "name": "aeromit",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "pengembangan aplikasi aeromit bbta3 dengan quasar",
   "productName": "Aeromit BBTA3",
   "author": "4KB4RPN136",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
+    "dev": "quasar dev",
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "email-validator": "^2.0.4",
     "form-urlencoded": "^4.2.1",

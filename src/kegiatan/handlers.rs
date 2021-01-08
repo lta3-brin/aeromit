@@ -45,7 +45,7 @@ use crate::kegiatan::services::{
 /// # Masukan
 ///
 /// * `payload` - Data masukan dari pengguna untuk tambah kegiatan.
-/// * `session` - actix session.
+/// * `req` - HttpRequest.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -83,7 +83,7 @@ pub async fn tambah_kegiatan_handler(
 /// # Masukan
 ///
 /// * `doc_props` - properti dokumen untuk kelola limit dan skip.
-/// * `session` - actix session.
+/// * `req` - HttpRequest.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -121,7 +121,7 @@ pub async fn baca_kegiatan_handler(
 /// # Masukan
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
-/// * `session` - actix session.
+/// * `req` - HttpRequest.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -170,7 +170,7 @@ pub async fn baca_kegiatan_tertentu_handler(
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
 /// * `payload` - Data masukan dari pengguna untuk ubah kegiatan.
-/// * `session` - actix session.
+/// * `req` - HttpRequest.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
@@ -219,7 +219,7 @@ pub async fn ubah_kegiatan_tertentu_handler(
 /// # Masukan
 ///
 /// * `id` - id dokumen yang ingin ditelusuri.
-/// * `session` - actix session.
+/// * `req` - actix session.
 /// * `db` - mongodb Database type yang dishare melalui _application state_.
 ///
 /// <br />
