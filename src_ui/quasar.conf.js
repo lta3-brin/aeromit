@@ -74,9 +74,7 @@ module.exports = function (ctx) {
 
       // https://quasar.dev/quasar-cli/handling-process-env#Import-based-on-process.env
       env: {
-        SERV: ctx.dev
-          ? process.env.HOST_DEV
-          : process.env.HOST_PROD
+        SERV: process.env.APP_ADDRESS
       }
     },
 
