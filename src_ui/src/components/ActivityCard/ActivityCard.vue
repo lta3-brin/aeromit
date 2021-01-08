@@ -1,6 +1,6 @@
 <template>
-  <q-card flat bordered class="q-mx-sm">
-    <q-card-section>
+  <q-card flat bordered class="column justify-between q-mx-sm q-pb-lg full-height">
+    <q-card-section class="col">
       <div class="text-overline ellipsis">{{ data['ruang'] }}</div>
       <div class="text-h6 q-mt-sm ellipsis-3-lines">
         {{ data['nama'] }}
@@ -9,8 +9,7 @@
     </q-card-section>
 
     <q-separator />
-
-    <q-card-actions class="flex justify-between">
+    <q-card-actions class="flex justify-between col-2">
       <q-btn flat round icon="event" @click="openDialog = true" />
       <q-btn flat color="primary">
         Gabung
