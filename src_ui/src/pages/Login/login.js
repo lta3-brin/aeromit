@@ -23,15 +23,14 @@ export default {
           password: this.password
         }
 
-        const res = await axios.post(
-          `${process.env.SERV}/v1/pengguna/login/`,
-          urlencoded(data)
+        const token = await this.$store.dispatch(
+          "otentikasi/otentikasiAction",
+          data
         )
-
-        const token = res.data.hasil
 
         Cookies.set("_msk", token)
         this.$q.loadingBar.stop()
+        // this.$router.push({name: "utama"}).then((_) => _)
       } catch (err) {
         this.errorStatus = true
         this.$q.loadingBar.stop()

@@ -3,6 +3,7 @@ import Vuex from "vuex"
 
 import layouts from "./layouts"
 import kegiatan from "./kegiatan"
+import otentikasi from "./otentikasi"
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       layouts,
-      kegiatan
+      kegiatan,
+      otentikasi
     },
 
     // enable strict mode (adds overhead!)
