@@ -6,7 +6,7 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/Utama/Utama.vue'), name: 'utama' },
       { path: 'profil', component: () => import('pages/Profil.vue'), name: 'profil' },
-      { path: 'masuk', component: () => import('pages/Login/Login.vue'), name: 'login' },
+      { path: 'masuk', component: () => import('pages/Login/Login.vue'), name: 'masuk' },
     ]
   },
 
