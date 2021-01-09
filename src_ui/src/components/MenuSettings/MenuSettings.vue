@@ -10,7 +10,7 @@
 
       <q-separator />
 
-      <q-item clickable v-close-popup @click="goToPage('login')">
+      <q-item clickable v-close-popup @click="goToPage('masuk')">
         <q-item-section avatar>
           <q-icon name="login" />
         </q-item-section>
