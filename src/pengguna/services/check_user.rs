@@ -10,9 +10,12 @@
 //! ```rust
 //! use crate::pengguna::services::check_user::{...}
 //! ```
+use std::env;
 use actix_web::HttpRequest;
+use jsonwebtoken::{DecodingKey, Validation};
 use crate::app::errors::AppErrors;
 use crate::app::helpers::{AppHelpers, AppHelpersTrait};
+use crate::pengguna::models::Klaim;
 
 
 /// # Fungsi run
@@ -36,8 +39,16 @@ pub fn run(req: HttpRequest) -> Result<bool, AppErrors> {
     let token = <AppHelpers as AppHelpersTrait>::get_token(headers)?;
 
     if token.is_empty() {
-        Ok(false)
+        Err(AppErrors::UnauthorizeUser)
     } else {
+        let secret = env::var("APP_SECRET")?;
+
+        jsonwebtoken::decode::<Klaim>(
+            &token,
+            &DecodingKey::from_secret(secret.as_bytes()),
+            &Validation::default()
+        )?;
+
         Ok(true)
     }
 }

@@ -1,7 +1,6 @@
-import axios from "axios"
 import {Cookies} from "quasar"
-import urlencoded from "form-urlencoded"
 import {validate} from "email-validator"
+import {checkError} from "src/handlers/error";
 
 export default {
   name: 'LoginPage',
@@ -9,8 +8,14 @@ export default {
     return {
       email: null,
       password: null,
-      pesan: "",
-      errorStatus: false
+    }
+  },
+  computed: {
+    pesan: function () {
+      return `${this.$store.getters["kegiatan/kegiatanPesanGetter"]}. ${this.$store.getters["kegiatan/kegiatanHasilGetter"]}`
+    },
+    showBanner: function () {
+      return this.$store.getters["kegiatan/kegiatanSuksesGetter"]
     }
   },
   methods: {
@@ -23,29 +28,20 @@ export default {
           password: this.password
         }
 
-        const res = await axios.post(
-          `${process.env.SERV}/v1/pengguna/login/`,
-          urlencoded(data)
+        const result = await this.$store.dispatch(
+          "otentikasi/otentikasiAction",
+          data
         )
 
-        const token = res.data.hasil
+        const token = result["data"]["hasil"]
 
         Cookies.set("_msk", token)
         this.$q.loadingBar.stop()
+        this.$router.push({name: "utama"}).then((_) => {})
       } catch (err) {
-        this.errorStatus = true
         this.$q.loadingBar.stop()
 
-        if (err.response) {
-          let data = err.response.data
-          if (data.hasOwnProperty("pesan")) {
-            this.pesan = data["pesan"]
-          } else {
-            this.pesan = data
-          }
-        } else {
-          this.pesan = err.message
-        }
+        checkError(err, this.$store)
       }
     },
     onReset() {

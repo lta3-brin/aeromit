@@ -7,7 +7,7 @@
 // https://quasar.dev/quasar-cli/quasar-conf-js
 /* eslint-env node */
 
-module.exports = function (ctx) {
+module.exports = function (/* ctx */) {
   return {
     // https://quasar.dev/quasar-cli/supporting-ts
     supportTS: false,
@@ -19,8 +19,8 @@ module.exports = function (ctx) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
-
       'axios',
+      'oten',
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -74,9 +74,7 @@ module.exports = function (ctx) {
 
       // https://quasar.dev/quasar-cli/handling-process-env#Import-based-on-process.env
       env: {
-        SERV: ctx.dev
-          ? process.env.HOST_DEV
-          : process.env.HOST_PROD
+        SERV: process.env.APP_ADDRESS
       }
     },
 

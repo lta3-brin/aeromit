@@ -1,4 +1,4 @@
-import {goToHome} from "src/handlers/layout"
+import {goToPage} from "src/handlers/menu"
 import InfoDialog from "src/components/InfoDialog/InfoDialog.vue"
 import MenuSettings from "src/components/MenuSettings/MenuSettings.vue"
 
@@ -12,7 +12,7 @@ export default {
     MenuSettings
   },
   methods: {
-    goToHome,
+    goToPage,
     clicked: function() {
       this.$store.commit('layouts/openDialogMutation', true)
     }

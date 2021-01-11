@@ -2,25 +2,25 @@
 
 pengembangan aplikasi aeromit bbta3 dengan quasar
 
-## Install the dependencies
+## Pasang package yang digunakan
 ```bash
 npm install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### Jalankan aplikasi dalam modus pengembangan (memuat halaman otomatis, laporan kesalahan, dan lain sebagainya)
 ```bash
 quasar dev
 ```
 
-### Lint the files
+### Beri petunjuk kesalahan format 
 ```bash
 npm run lint
 ```
 
-### Build the app for production
+### Hasilkan aplikasi untuk pengguna
 ```bash
 quasar build
 ```
 
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+### Sesuaikan konfigurasi yang diperlukan
+Kunjungi [Kelola quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
