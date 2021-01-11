@@ -5,3 +5,7 @@ export function kegiatanHasilGetter (state) {
 export function kegiatanPesanGetter (state) {
   return state.kegiatan.pesan
 }
+
+export function kegiatanSuksesGetter (state) {
+  return state.kegiatan.sukses
+}
