@@ -1,5 +1,6 @@
 import ActivityCard from "src/components/ActivityCard/ActivityCard.vue"
 import {goToPage} from "src/handlers/menu"
+import {checkError} from "src/handlers/error"
 
 function fetchKegiatan(payload) {
   return payload.data
@@ -32,18 +33,7 @@ export default {
     } catch (err) {
       this.anyError = true
       this.$q.loadingBar.stop()
-
-      if (err.response) {
-        this.statusCode = err.response.status
-        this.$store.commit('kegiatan/kegiatanMutation', err.response.data)
-      } else {
-        this.statusCode = 500
-        this.$store.commit('kegiatan/kegiatanMutation', {
-          sukses: false,
-          pesan: "Terjadi kesalahan yang perlu diperhatikan",
-          hasil: err.message
-        })
-      }
+      this.statusCode = checkError(err, this.$store)
 
       const hasil = this.$store.getters['kegiatan/kegiatanHasilGetter']
       this.errorMessage = `${hasil}.`

@@ -13,7 +13,7 @@
             round
             icon="home"
             aria-label="Home"
-            @click="goToHome"
+            @click="goToPage('utama')"
           />
 
           <q-btn

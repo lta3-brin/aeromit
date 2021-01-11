@@ -13,7 +13,6 @@ export async function checkOtenAction() {
 }
 
 export async function otentikasiAction(ctx, payload) {
-  console.log("payload:", payload)
   const data = {
     email: payload.email,
     password: payload.password

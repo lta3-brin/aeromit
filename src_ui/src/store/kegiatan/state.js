@@ -1,5 +1,9 @@
 export default function () {
   return {
-    kegiatan: null
+    kegiatan: {
+      sukses: true,
+      pesan: "",
+      hasil: ""
+    }
   }
 }
