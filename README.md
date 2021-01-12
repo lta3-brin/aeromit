@@ -24,6 +24,7 @@ Pengembangan ui dilakukan menggunakan [Quasar](https://quasar.dev/) dan dibuat m
 Siapkan _Environment Variable_ di terminal/console dengan contoh berikut:
 ```
 APP_ADDRESS=http://127.0.0.1:8080
+APP_EXPIRE=7
 ```
 
 Jalankan development server:
