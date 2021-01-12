@@ -1,4 +1,3 @@
-/*
-export function someMutation (state) {
+export function tokenExistMutation (state, status) {
+  state.tokenExist = status
 }
-*/

@@ -10,6 +10,16 @@ export default {
       password: null,
     }
   },
+  beforeRouteEnter(to, from, next) {
+    const check = to.matched.some(value => value.name === "masuk")
+
+    if (check) {
+      const token = Cookies.get("_msk")
+
+      if (token) next({ path: from.path })
+      else next()
+    } else next()
+  },
   computed: {
     pesan: function () {
       return `${this.$store.getters["kegiatan/kegiatanPesanGetter"]}. ${this.$store.getters["kegiatan/kegiatanHasilGetter"]}`
@@ -35,8 +45,13 @@ export default {
 
         const token = result["data"]["hasil"]
 
-        Cookies.set("_msk", token)
+        Cookies.set("_msk", token, {
+          expires: process.env.APP_EXPIRE,
+          sameSite: 'Lax'
+        })
+
         this.$q.loadingBar.stop()
+        this.$store.commit("otentikasi/tokenExistMutation", true)
         this.$router.push({name: "utama"}).then((_) => {})
       } catch (err) {
         this.$q.loadingBar.stop()
