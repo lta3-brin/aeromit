@@ -14,19 +14,24 @@ use std::env;
 use actix_web::HttpRequest;
 use jsonwebtoken::{DecodingKey, Validation};
 use crate::app::errors::AppErrors;
-use crate::app::helpers::{AppHelpers, AppHelpersTrait};
+use crate::app::permissions::Roles;
+use crate::app::helpers::{
+    AppHelpers,
+    AppHelpersTrait
+};
 use crate::pengguna::models::Klaim;
 
 
 /// # Fungsi run
 ///
-/// Fungsi ini untuk menjalankan fungsi periksa session user.
+/// Fungsi ini untuk menjalankan fungsi periksa token pengguna.
 ///
 /// <br />
 ///
 /// # Masukan
 ///
 /// * `req` - Actix Http Request
+/// * `mode` - jenis periksa berdasarkan peran
 ///
 /// <br />
 ///
@@ -34,7 +39,7 @@ use crate::pengguna::models::Klaim;
 ///
 /// * `Result<bool, AppErrors>` - keluaran berupa _enum_ `Result` yang terdiri dari kumpulan
 /// `bool` dan _Enum_ `AppErrors`.
-pub fn run(req: HttpRequest) -> Result<bool, AppErrors> {
+pub fn run(req: HttpRequest, mode: Roles) -> Result<bool, AppErrors> {
     let headers = req.headers().get("authorization");
     let token = <AppHelpers as AppHelpersTrait>::get_token(headers)?;
 
@@ -43,12 +48,19 @@ pub fn run(req: HttpRequest) -> Result<bool, AppErrors> {
     } else {
         let secret = env::var("APP_SECRET")?;
 
-        jsonwebtoken::decode::<Klaim>(
+        let payload = jsonwebtoken::decode::<Klaim>(
             &token,
             &DecodingKey::from_secret(secret.as_bytes()),
             &Validation::default()
         )?;
 
-        Ok(true)
+        match mode {
+            Roles::Authenticated => Ok(true),
+            Roles::Admin => {
+                let isadmin = payload.claims.isadmin();
+
+                Ok(isadmin)
+            },
+        }
     }
 }
