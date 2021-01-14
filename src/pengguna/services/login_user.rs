@@ -76,6 +76,7 @@ pub async fn verify(
                 let klm = Klaim::new(
                     peg.nama,
                     peg.email,
+                    peg.isadmin,
                     iat.timestamp_nanos(),
                     exp.timestamp_nanos()
                 );
