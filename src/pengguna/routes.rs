@@ -59,7 +59,8 @@ pub fn pengguna_route(route: &mut web::ServiceConfig) {
                 .route(web::get().to(get_users::all))
         )
         .service(login_user::masuk)
-        .service(check_user::is_ok)
+        .service(check_user::is_authenticated)
+        .service(check_user::is_admin)
         .service(
             web::resource("/pengguna/{id}/")
                 .name("more_on_user")

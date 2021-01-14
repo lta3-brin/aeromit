@@ -52,6 +52,9 @@ pub struct Klaim {
     /// Email pengguna
     email: String,
 
+    /// Adminkah
+    admin: bool,
+
     /// Kapan klaim diterbitkan
     iat: i64,
 
@@ -81,12 +84,14 @@ impl Klaim {
     pub fn new(
         subject: String,
         email: String,
+        admin: bool,
         iat: i64,
         exp: i64
     ) -> Self {
         Self {
             sub: subject,
             email,
+            admin,
             iat,
             exp
         }
@@ -109,5 +114,24 @@ impl Klaim {
     /// * `String` - keluaran berupa String
     pub fn get_email(self) -> String {
         self.email
+    }
+
+    /// # Fungsi isadmin
+    ///
+    /// Fungsi untuk mengetahui status admin
+    ///
+    /// <br />
+    ///
+    /// # Masukan
+    ///
+    /// * `self` - dapat diakses setelah bagian dari _Struct_ Klaim.
+    ///
+    /// <br />
+    ///
+    /// # Keluaran
+    ///
+    /// * `bool` - status admin berupa boolean
+    pub fn isadmin(self) -> bool {
+        self.admin
     }
 }
