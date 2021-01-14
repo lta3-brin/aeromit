@@ -15,3 +15,9 @@ pub mod is_authenticated;
 
 /// _Struct_ yang digunakan untuk kelola perizinan melalui impl
 pub struct UserPermissions;
+
+/// _Enum_ Roles sebagai peran pengguna
+pub enum Roles {
+    Admin,
+    Authenticated,
+}
