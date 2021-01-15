@@ -9,6 +9,7 @@
 //! ```rust
 //! use crate::kegiatan::services::{...}
 //! ```
+use std::env;
 use mongodb::{
     Database,
     options::FindOptions,
@@ -79,11 +80,13 @@ pub async fn baca_kegiatan_service(
 ) -> Result<Vec<Kegiatan>, AppErrors> {
     let mut kegiatan: Vec<Kegiatan> = vec![];
     let collection = db.collection("kegiatan");
+    let max_page = env::var("MAX_PAGE")?;
+    let max_page = max_page.parse::<i64>()?;
 
     let doc_limit: i64;
     if let Some(limit) = doc_props.limit {
         doc_limit = limit;
-    } else { doc_limit = 10; }
+    } else { doc_limit = max_page; }
 
     let options = FindOptions::builder()
         .sort(doc! { "kapan": -1 })
