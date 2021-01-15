@@ -75,7 +75,8 @@ module.exports = function (/* ctx */) {
       // https://quasar.dev/quasar-cli/handling-process-env#Import-based-on-process.env
       env: {
         APP_ADDRESS: process.env.APP_ADDRESS,
-        APP_EXPIRE: process.env.APP_EXPIRE
+        APP_EXPIRE: process.env.APP_EXPIRE,
+        MAX_PAGE: process.env.MAX_PAGE,
       }
     },
 
