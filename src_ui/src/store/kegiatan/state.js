@@ -3,7 +3,7 @@ export default function () {
     kegiatan: {
       sukses: true,
       pesan: "",
-      hasil: ""
+      hasil: []
     }
   }
 }
