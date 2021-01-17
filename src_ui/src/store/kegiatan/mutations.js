@@ -3,7 +3,9 @@ export function kegiatanMutation (state, payload) {
 }
 
 export function muatKegiatanMutation(state, payload) {
-  payload.forEach(kegiatan => state.kegiatan.push(payload))
+  payload.forEach(kegiatan => {
+    state.kegiatan.hasil.push(kegiatan)
+  })
 }
 
 export function kegiatanResetMutation (state) {
