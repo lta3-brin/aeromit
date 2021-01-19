@@ -60,6 +60,7 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
         let admin = dok.get_bool("isadmin")?;
         let aktif = dok.get_bool("isactive")?;
         let kapan = dok.get_datetime("dibuat")?;
+        let instansi = dok.get_str("instansi")?;
 
         let diubah = <AppHelpers as AppHelpersTrait>::last_modified(
             dok.get("lastModified")
@@ -71,6 +72,7 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
             email: email.to_string(),
             password: password.to_string(),
             isadmin: admin,
+            instansi: instansi.to_string(),
             isactive: aktif,
             dibuat: *kapan,
             last_modified: diubah,
@@ -104,6 +106,7 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
             "isadmin": payload.0.isadmin,
             "isactive": true,
             "dibuat": Utc::now(),
+            "instansi": payload.0.instansi
         })
     }
 
@@ -129,6 +132,7 @@ impl PenggunaHelpersTrait for PenggunaHelpers {
                 "nama": payload.0.nama,
                 "isadmin": payload.0.isadmin,
                 "isactive": payload.0.isactive,
+                "instansi": payload.0.instansi
             },
             "$currentDate": { "lastModified": true }
         })
