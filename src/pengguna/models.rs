@@ -32,6 +32,9 @@ pub struct Pengguna {
     /// adminkah pengguna
     pub isadmin: bool,
 
+    /// instansi/kampus
+    pub instansi: String,
+
     /// masih aktifkah pengguna
     pub isactive: bool,
 
