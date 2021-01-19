@@ -35,7 +35,16 @@
 
     <div class="row justify-center q-py-lg q-col-gutter-md" v-if="koleksi.length >= max_page">
       <div class="col-12 col-md-4">
-        <q-btn outline color="black" label="MUAT LAGI" size="md" padding="sm" class="full-width" />
+        <q-btn
+          outline
+          color="black"
+          label="MUAT LAGI"
+          size="md"
+          padding="sm"
+          class="full-width"
+          @click="muatKegiatanLagi"
+          v-if="showLoadMore"
+        />
       </div>
     </div>
   </q-page>
