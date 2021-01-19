@@ -51,6 +51,10 @@ pub struct PenggunaDto {
 
     /// adminkah pengguna
     pub isactive: bool,
+
+    /// instansi/kampus
+    #[validate(length(min = 3))]
+    pub instansi: String
 }
 
 /// Struct sebagai data transfer object untuk ubah pengguna.
@@ -65,6 +69,10 @@ pub struct UbahPenggunaDto {
 
     /// aktifkah pengguna
     pub isactive: bool,
+
+    /// instansi/kampus
+    #[validate(length(min = 3))]
+    pub instansi: String
 }
 
 /// Struct sebagai login data transfer object dari pengguna.
