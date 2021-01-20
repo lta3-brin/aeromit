@@ -18,3 +18,4 @@ pub mod update_user;
 pub mod delete_user;
 pub mod login_user;
 pub mod check_user;
+pub mod get_me;
