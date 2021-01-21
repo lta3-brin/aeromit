@@ -31,6 +31,7 @@
             round
             icon="settings"
             aria-label="Menu"
+            v-if="isSignIn"
           >
             <MenuSettings />
           </q-btn>
