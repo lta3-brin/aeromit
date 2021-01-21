@@ -5,7 +5,7 @@ const routes = [
     component: () => import('layouts/MainLayout/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Utama/Utama.vue'), name: 'utama', meta: { kunci: true } },
-      { path: 'profil', component: () => import('pages/Profil.vue'), name: 'profil', meta: { kunci: true } },
+      { path: 'profil', component: () => import('pages/Profil/Profil.vue'), name: 'profil', meta: { kunci: true } },
       { path: 'masuk', component: () => import('pages/Login/Login.vue'), name: 'masuk' },
     ]
   },
