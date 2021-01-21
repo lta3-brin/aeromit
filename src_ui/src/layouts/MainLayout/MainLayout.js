@@ -16,5 +16,10 @@ export default {
     clicked: function() {
       this.$store.commit('layouts/openDialogMutation', true)
     }
+  },
+  computed: {
+    isSignIn: function () {
+      return this.$store.getters["otentikasi/tokenExistGetter"]
+    }
   }
 }
